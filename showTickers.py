@@ -8,7 +8,7 @@ def showTickers(tickerSymbols={}):
     for tickerSymbol in tickerSymbols:
         tickerData = yf.Ticker(tickerSymbol)
 
-        tickerDF = tickerData.history(period="1d", start="2020-1-1", end="2021-2-28")
+        tickerDF = tickerData.history(period="1y")
 
         if not tickerDF.Close.empty | tickerDF.Volume.empty:
             st.write(f"## {tickerSymbol}")
