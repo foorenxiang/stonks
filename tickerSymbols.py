@@ -12,7 +12,7 @@ def getTickerSymbols():
             "OCGN",
             "NVAX",
             "MZH.SI",
-            "D01.S",
+            "D01.SI",
         }
     )
     tickerSymbols.sort()
