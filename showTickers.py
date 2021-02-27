@@ -19,4 +19,4 @@ def showTickers(tickerSymbols={}):
             st.write(f"{tickerSymbol} Volume\n\n\n")
 
         else:
-            st.write(f"{tickerSymbols} is not a valid symbol on Yahoo Finance!!")
+            st.write(f"{tickerSymbol} is not a valid symbol on Yahoo Finance!!")
