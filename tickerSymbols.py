@@ -1,6 +1,19 @@
 def getTickerSymbols():
     tickerSymbols = list(
-        {"GME", "GOOG", "AAPL", "OCGN", "SQ", "WMT", "DIS", "MZH.SI", "NVAX", "D01.S"}
+        {
+            "TIGR",
+            "TBLT",
+            "GME",
+            "SQ",
+            "WMT",
+            "V",
+            "AAPL",
+            "DIS",
+            "OCGN",
+            "NVAX",
+            "MZH.SI",
+            "D01.S",
+        }
     )
     tickerSymbols.sort()
     return tickerSymbols
