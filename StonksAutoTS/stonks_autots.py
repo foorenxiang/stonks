@@ -99,7 +99,7 @@ def train_stonks():
     stocks = get_stocks()
     ticker_dfs = get_stocks_data(stocks)
 
-    selectedMode = AutoTSConfigs.ACCURATE
+    selectedMode = AutoTSConfigs.FAST
 
     target_name = f"{str(datetime.now()).split('.')[0]} {selectedMode}"
     target_parent = Path(__file__).resolve().parent
@@ -111,39 +111,65 @@ def train_stonks():
 
         ticker_dfs = set_date_on_yf_df(ticker_dfs)
 
-        model = AutoTSConfigs.create_model_lambda(selectedMode)()
-
-        # TODO: create model for open as well
-        model = model.fit(
+        model_close = AutoTSConfigs.create_model_lambda(selectedMode)().fit(
             ticker_dfs,
             date_col="DateCol",
             value_col="Close",
         )
 
-        prediction = model.predict()
+        prediction_close = model_close.predict()
         # Print the details of the best model
         print("Details of best model:")
-        print(model)
+        print(model_close)
 
         # point forecasts dataframe
-        forecasts_df = prediction.forecast
+        forecasts_close = prediction_close.forecast
         # upper and lower forecasts
         forecasts_up, forecasts_low = (
-            prediction.upper_forecast,
-            prediction.lower_forecast,
+            prediction_close.upper_forecast,
+            prediction_close.lower_forecast,
         )
 
         # accuracy of all tried model results
-        model_results = model.results()
+        model_results_close = model_close.results()
         # and aggregated from cross validation
-        validation_results = model.results("validation")
+        validation_results_close = model_close.results("validation")
+
+        model_open = AutoTSConfigs.create_model_lambda(selectedMode)().fit(
+            ticker_dfs,
+            date_col="DateCol",
+            value_col="Open",
+        )
+
+        prediction_open = model_close.predict()
+        # Print the details of the best model
+        print("Details of best model:")
+        print(model_close)
+
+        # point forecasts dataframe
+        forecasts_open = prediction_open.forecast
+        # upper and lower forecasts
+        forecasts_up, forecasts_low = (
+            prediction_open.upper_forecast,
+            prediction_open.lower_forecast,
+        )
+
+        # accuracy of all tried model results
+        model_results_open = model_close.results()
+        # and aggregated from cross validation
+        validation_results_open = model_close.results("validation")
 
         variables_to_be_saved = {
-            "model": model,
-            "prediction": prediction,
-            "forecasts_df": forecasts_df,
-            "model_results": model_results,
-            "validation_results": validation_results,
+            "model_close": model_close,
+            "prediction_close": prediction_close,
+            "forecasts_close": forecasts_close,
+            "model_results_close": model_results_close,
+            "validation_results_close": validation_results_close,
+            "model_open": model_open,
+            "prediction_open": prediction_open,
+            "forecasts_open": forecasts_open,
+            "model_results_open": model_results_open,
+            "validation_results_open": validation_results_open,
         }
 
         [
