@@ -21,3 +21,7 @@ python_version = "3.8"
 
 [pipenv]
 allow_prereleases = true
+
+[scripts]
+autots_train = "python3 StonksAutoTS/stonks_autots.py"
+autots_results = "python3 StonksAutoTS/cli_read_results.py"
