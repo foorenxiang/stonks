@@ -10,6 +10,15 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
+def time_exec(lambdaFunc):
+    import time
+
+    start_time = time.monotonic()
+    lambdaFunc()
+    end_time = time.monotonic()
+    print(f"Time taken to train: {end_time - start_time}")
+
+
 def get_stocks():
     from ticker_symbols import get_ticker_symbols
 
@@ -34,11 +43,49 @@ def get_last_weekday():
     return str(last_weekday.date())
 
 
-def train_stonks(forecast_days):
+def set_date_on_yf_df(yf_df):
+    """Might have performance issue"""
+    yf_df["DateCol"] = yf_df.apply(lambda row: row.name, axis=1)
+    return yf_df
+
+
+class AutoTSConfigs:
+    FAST = "FAST"
+    ACCURATE = "ACCURATE"
+
+    __autots_mode_configs = {
+        "FAST": lambda: AutoTS(
+            forecast_length=14,
+            frequency="infer",
+            prediction_interval=0.9,
+            ensemble=None,
+            model_list="superfast",
+            transformer_list="fast",
+            max_generations=5,
+            num_validations=2,
+            validation_method="backwards",
+        ),
+        "ACCURATE": lambda: AutoTS(
+            forecast_length=14,
+            frequency="infer",
+            prediction_interval=0.95,
+            ensemble="all",
+            model_list="parallel",
+            transformer_list="fast",
+            max_generations=15,
+            num_validations=2,
+            validation_method="backwards",
+        ),
+    }
+
+    @classmethod
+    def create_model_lambda(cls, selectedMode):
+        return cls.__autots_mode_configs[getattr(cls, selectedMode)]
+
+
+def train_stonks():
 
     stocks = get_stocks()
-
-    # ticker_dfs = {stock: yf.Ticker(stock).history(period=period) for stock in stocks}
     ticker_dfs = get_stocks_data(stocks)
 
     print(ticker_dfs["AAPL"])
@@ -48,40 +95,9 @@ def train_stonks(forecast_days):
         print(item)
         print("\n\n\n")
 
-    def set_date_on_yf_df(yf_df):
-        """Might have performance issue"""
-        yf_df["DateCol"] = yf_df.apply(lambda row: row.name, axis=1)
-        return yf_df
+    selectedMode = AutoTSConfigs.ACCURATE
 
-    class FastTrain:
-        config_name = "Fast"
-        forecast_length = forecast_days
-        frequency = "infer"
-        prediction_interval = 0.9
-        ensemble = None
-        model_list = "superfast"
-        transformer_list = "fast"
-        max_generations = 5
-        num_validations = 2
-        validation_method = "backwards"
-
-    class AccurateTrain:
-        config_name = "Accurate"
-        forecast_length = forecast_days
-        frequency = "infer"
-        prediction_interval = 0.95
-        ensemble = "all"
-        # model_list = "parallel"
-        model_list = "fast_parallel"
-        # model_list = "superfast"
-        transformer_list = "fast"
-        max_generations = 15
-        num_validations = 2
-        validation_method = "backwards"
-
-    selectedMode = AccurateTrain
-
-    target_name = f"{str(datetime.now()).split('.')[0]} {selectedMode.config_name}"
+    target_name = f"{str(datetime.now()).split('.')[0]} {selectedMode}"
     target_parent = Path(__file__).resolve().parent
     (target_parent / "model_dumps").mkdir(exist_ok=True)
     (target_parent / "model_dumps" / target_name).mkdir(exist_ok=True)
@@ -91,17 +107,7 @@ def train_stonks(forecast_days):
 
         ticker_dfs = set_date_on_yf_df(ticker_dfs)
 
-        model = AutoTS(
-            forecast_length=selectedMode.forecast_length,
-            frequency=selectedMode.frequency,
-            prediction_interval=selectedMode.prediction_interval,
-            ensemble=selectedMode.ensemble,
-            model_list=selectedMode.model_list,
-            transformer_list=selectedMode.transformer_list,
-            max_generations=selectedMode.max_generations,
-            num_validations=selectedMode.num_validations,
-            validation_method=selectedMode.validation_method,
-        )
+        model = AutoTSConfigs.create_model_lambda(selectedMode)()
         model = model.fit(
             ticker_dfs,
             date_col="DateCol",
@@ -143,9 +149,12 @@ def train_stonks(forecast_days):
 
 
 if __name__ == "__main__":
+    # time_exec(lambda: train_stonks(forecast_days=7))
+
+    # train_stonks()
     import time
 
     start_time = time.monotonic()
-    train_stonks(forecast_days=7)
+    train_stonks()
     end_time = time.monotonic()
     print(f"Time taken to train: {end_time - start_time}")
