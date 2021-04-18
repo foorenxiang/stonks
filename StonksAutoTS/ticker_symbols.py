@@ -1,19 +1,23 @@
 def get_ticker_symbols():
     ticker_symbols = list(
         {
-            "PLTR",
-            "TIGR",
-            "TBLT",
-            "GME",
-            "SQ",
-            "WMT",
-            "V",
             "AAPL",
-            "DIS",
-            "OCGN",
-            "NVAX",
+            "^GSPC",
+            # "GOOG",
+            # "PLTR",
+            # "TIGR",
+            # "TBLT",
+            # "GME",
+            # "SQ",
+            # "WMT",
+            "V",
+            # "DIS",
+            # "OCGN",
+            # "NVAX",
             "MZH.SI",
-            "D01.SI",
+            # "D01.SI",
+            "^IXIC",
+            "TSLA",
         }
     )
     ticker_symbols.sort()
