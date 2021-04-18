@@ -1,7 +1,9 @@
 from joblib import load
+import os
 from pathlib import Path
-import pandas as pd
 import logging
+
+from joblib.numpy_pickle import dump
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -21,15 +23,27 @@ class AutoTSData:
         )
 
     @classmethod
-    def print_autots_data(cls, data_of_interest, dump_folder):
+    def print_autots_data(cls, data_of_interest, dump_folder=""):
         data_of_interest_name = data_of_interest[1:].split(".")[0].split("*")[0]
 
         model_dumps = Path(dump_folder)
-        # if dump_folder == None:
-        # dump_folder = (Path(__file__).resolve().parent / "model_dumps").glob()
+        if dump_folder == "":
 
-        # else:
-        # model_dumps = Path(dump_folder)
+            model_dumps_folder = Path(__file__).resolve().parent / "model_dumps"
+            model_dumps_subdirectories = model_dumps_folder.glob("*")
+
+            all_subdirs = [
+                directory
+                for directory in model_dumps_subdirectories
+                if directory.is_dir()
+            ]
+            latest_subdir = max(all_subdirs, key=os.path.getmtime)
+
+            dump_folder = latest_subdir
+            model_dumps = dump_folder
+
+        else:
+            model_dumps = Path(dump_folder)
 
         try:
             files = model_dumps.glob(data_of_interest)
@@ -57,7 +71,4 @@ class AutoTSData:
 
 
 if __name__ == "__main__":
-    AutoTSData.print_autots_data(
-        AutoTSData.FORECASTS,
-        r"/Users/foorx/code/stonks/StonksAutoTS/model_dumps/2021-04-18 15:34:23.007267",
-    )
+    AutoTSData.print_autots_data(AutoTSData.FORECASTS)
