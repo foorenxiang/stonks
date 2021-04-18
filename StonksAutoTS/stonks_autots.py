@@ -5,6 +5,8 @@ from joblib import dump
 from autots import AutoTS
 from pathlib import Path
 from datetime import datetime, timedelta
+import math
+import time
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -28,14 +30,16 @@ def get_stocks():
 def get_stocks_data(stocks):
     period = "3mo"
     stocks_dfs_dict = {
-        stock: yf.Ticker(stock).history(period=period, end=get_last_weekday())
+        stock: yf.Ticker(stock).history(
+            period=period, end=get_last_weekday(datetime.today())
+        )
         for stock in stocks
     }
     return stocks_dfs_dict
 
 
-def get_last_weekday():
-    last_weekday = datetime.today()
+def get_last_weekday(date):
+    last_weekday = date
 
     while last_weekday.weekday() > 4:
         last_weekday -= timedelta(days=1)
@@ -52,10 +56,16 @@ def set_date_on_yf_df(yf_df):
 class AutoTSConfigs:
     FAST = "FAST"
     ACCURATE = "ACCURATE"
+    FORECAST_LENGTH = 7
+
+    __suggested_validation_trials = math.floor(FORECAST_LENGTH / 3)
+    validation_trials = (
+        __suggested_validation_trials if __suggested_validation_trials > 2 else 2
+    )
 
     __autots_mode_configs = {
         "FAST": lambda: AutoTS(
-            forecast_length=14,
+            forecast_length=AutoTSConfigs.FORECAST_LENGTH,
             frequency="infer",
             prediction_interval=0.9,
             ensemble=None,
@@ -66,14 +76,14 @@ class AutoTSConfigs:
             validation_method="backwards",
         ),
         "ACCURATE": lambda: AutoTS(
-            forecast_length=14,
+            forecast_length=AutoTSConfigs.FORECAST_LENGTH,
             frequency="infer",
-            prediction_interval=0.95,
-            ensemble="all",
+            prediction_interval=0.9,
+            ensemble="dist",
             model_list="parallel",
             transformer_list="fast",
-            max_generations=15,
-            num_validations=2,
+            max_generations=5,
+            num_validations=AutoTSConfigs.validation_trials,
             validation_method="backwards",
         ),
     }
@@ -83,17 +93,11 @@ class AutoTSConfigs:
         return cls.__autots_mode_configs[getattr(cls, selectedMode)]
 
 
+# TODO: refactor to make this function smaller (consider using class)
 def train_stonks():
 
     stocks = get_stocks()
     ticker_dfs = get_stocks_data(stocks)
-
-    print(ticker_dfs["AAPL"])
-
-    for key, item in ticker_dfs.items():
-        print(key)
-        print(item)
-        print("\n\n\n")
 
     selectedMode = AutoTSConfigs.ACCURATE
 
@@ -108,6 +112,8 @@ def train_stonks():
         ticker_dfs = set_date_on_yf_df(ticker_dfs)
 
         model = AutoTSConfigs.create_model_lambda(selectedMode)()
+
+        # TODO: create model for open as well
         model = model.fit(
             ticker_dfs,
             date_col="DateCol",
@@ -136,8 +142,6 @@ def train_stonks():
             "model": model,
             "prediction": prediction,
             "forecasts_df": forecasts_df,
-            # "forecasts_up": forecasts_up,
-            # "forecasts_low": forecasts_low,
             "model_results": model_results,
             "validation_results": validation_results,
         }
@@ -149,12 +153,9 @@ def train_stonks():
 
 
 if __name__ == "__main__":
-    # time_exec(lambda: train_stonks(forecast_days=7))
-
-    # train_stonks()
-    import time
-
     start_time = time.monotonic()
     train_stonks()
     end_time = time.monotonic()
-    print(f"Time taken to train: {end_time - start_time}")
+    time_taken = end_time - start_time
+    mins, secs = math.floor(time_taken / 60), math.floor(time_taken % 60)
+    print(f"Time taken to train: {mins}mins {secs}secs")
