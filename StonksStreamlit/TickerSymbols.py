@@ -1,6 +1,7 @@
 def getTickerSymbols():
     tickerSymbols = list(
         {
+            "PLTR",
             "TIGR",
             "TBLT",
             "GME",
