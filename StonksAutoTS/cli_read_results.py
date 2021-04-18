@@ -10,11 +10,14 @@ logger.setLevel(logging.DEBUG)
 
 
 class AutoTSData:
-
-    FORECASTS = "*forecasts_df*.joblib"
-    MODEL_RESULTS = "*model_results.joblib"
-    PREDICTION_RESULTS = "*prediction.joblib"
-    VALIDATION_RESULTS = "*validation_results.joblib"
+    FORECASTS_OPEN = "*forecasts_open.joblib"
+    MODEL_RESULTS_OPEN = "*model_results_open.joblib"
+    PREDICTION_RESULTS_OPEN = "*prediction_open.joblib"
+    VALIDATION_RESULTS_OPEN = "*validation_results_open.joblib"
+    FORECASTS_CLOSE = "*forecasts_close.joblib"
+    MODEL_RESULTS_CLOSE = "*model_results_close.joblib"
+    PREDICTION_RESULTS_CLOSE = "*prediction_close.joblib"
+    VALIDATION_RESULTS_CLOSE = "*validation_results_close.joblib"
 
     @staticmethod
     def __df_to_csv(file_data, model_dumps, stock_name, data_of_interest):
@@ -54,11 +57,17 @@ class AutoTSData:
         for file in files:
             stock_name = str(file.stem).split("_")[0]
             file_data = load(file)
-            if data_of_interest == cls.VALIDATION_RESULTS:
+            if (
+                data_of_interest == cls.VALIDATION_RESULTS_OPEN
+                or data_of_interest == cls.VALIDATION_RESULTS_CLOSE
+            ):
                 cls.__df_to_csv(
                     file_data, model_dumps, stock_name, data_of_interest_name
                 )
-            elif data_of_interest == cls.FORECASTS:
+            elif (
+                data_of_interest == cls.FORECASTS_OPEN
+                or data_of_interest == cls.FORECASTS_CLOSE
+            ):
                 cls.__df_to_csv(
                     file_data,
                     model_dumps,
@@ -71,4 +80,7 @@ class AutoTSData:
 
 
 if __name__ == "__main__":
-    AutoTSData.print_autots_data(AutoTSData.FORECASTS)
+    AutoTSData.print_autots_data(AutoTSData.FORECASTS_OPEN)
+    AutoTSData.print_autots_data(AutoTSData.FORECASTS_CLOSE)
+    # AutoTSData.print_autots_data(AutoTSData.VALIDATION_RESULTS_OPEN)
+    # AutoTSData.print_autots_data(AutoTSData.VALIDATION_RESULTS_CLOSE)
