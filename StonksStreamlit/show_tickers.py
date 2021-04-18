@@ -6,7 +6,7 @@ class ShowTickers:
     tickerSymbols = set()
 
     @classmethod
-    def showTickers(cls, tickerSymbols={}):
+    def show_tickers(cls, tickerSymbols={}):
         if not tickerSymbols:
             st.write("### Please add ticker symbols to tickerSymbols.py to continue...")
         cls.tickerSymbols = tickerSymbols

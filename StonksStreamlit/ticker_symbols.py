@@ -1,5 +1,5 @@
-def getTickerSymbols():
-    tickerSymbols = list(
+def get_ticker_symbols():
+    ticker_symbols = list(
         {
             "PLTR",
             "TIGR",
@@ -16,5 +16,5 @@ def getTickerSymbols():
             "D01.SI",
         }
     )
-    tickerSymbols.sort()
-    return tickerSymbols
+    ticker_symbols.sort()
+    return ticker_symbols
