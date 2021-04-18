@@ -9,10 +9,11 @@ yfinance = "*"
 autots = "*"
 sklearn = "*"
 varname = "*"
-pytest = "*"
 
 [dev-packages]
 black = "*"
+pytest = "*"
+watchdog = "*"
 
 [requires]
 python_version = "3.8"
