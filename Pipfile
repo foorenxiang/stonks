@@ -9,6 +9,7 @@ yfinance = "*"
 autots = "*"
 sklearn = "*"
 varname = "*"
+auto-nlp = "*"
 
 [dev-packages]
 black = "*"
