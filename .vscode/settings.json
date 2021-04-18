@@ -1,4 +1,5 @@
 {
   "python.formatting.provider": "black",
-  "python.pythonPath": "/Users/foorx/.local/share/virtualenvs/stonks-CZNjmA0O/bin/python"
+  "python.pythonPath": "/Users/foorx/.local/share/virtualenvs/stonks-CZNjmA0O/bin/python",
+  "editor.tabSize": 4
 }
