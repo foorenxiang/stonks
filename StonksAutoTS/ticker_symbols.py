@@ -3,7 +3,7 @@ def get_ticker_symbols():
         {
             "AAPL",
             "^GSPC",
-            # "GOOG",
+            "GOOG",
             # "PLTR",
             # "TIGR",
             # "TBLT",
