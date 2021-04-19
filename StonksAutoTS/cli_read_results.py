@@ -27,7 +27,7 @@ class AutoTSData:
 
     @classmethod
     def print_autots_data(cls, data_of_interest, dump_folder=""):
-        data_of_interest_name = data_of_interest[1:].split(".")[0].split("*")[0]
+        data_of_interest_name = data_of_interest[1:].split(".")[0]
 
         model_dumps = Path(dump_folder)
         if dump_folder == "":
@@ -69,10 +69,7 @@ class AutoTSData:
                 or data_of_interest == cls.FORECASTS_CLOSE
             ):
                 cls.__df_to_csv(
-                    file_data,
-                    model_dumps,
-                    stock_name,
-                    data_of_interest_name.split("_")[0],
+                    file_data, model_dumps, stock_name, data_of_interest_name
                 )
             print("\n")
             print(stock_name)
