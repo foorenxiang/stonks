@@ -3,8 +3,6 @@ import os
 from pathlib import Path
 import logging
 
-from joblib.numpy_pickle import dump
-
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -76,8 +74,10 @@ class AutoTSData:
             print(file_data)
 
 
-if __name__ == "__main__":
+def generate_results():
     AutoTSData.print_autots_data(AutoTSData.FORECASTS_OPEN)
     AutoTSData.print_autots_data(AutoTSData.FORECASTS_CLOSE)
-    # AutoTSData.print_autots_data(AutoTSData.VALIDATION_RESULTS_OPEN)
-    # AutoTSData.print_autots_data(AutoTSData.VALIDATION_RESULTS_CLOSE)
+
+
+if __name__ == "__main__":
+    generate_results()
