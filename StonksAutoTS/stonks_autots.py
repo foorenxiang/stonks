@@ -10,13 +10,9 @@ from utils.exec_time import exec_time
 class StonksAutoTS:
     selectedMode = None
 
-    @staticmethod
-    def __get_stocks():
-        return get_ticker_symbols()
-
     @classmethod
     def __get_stocks_data(cls):
-        stocks = cls.__get_stocks()
+        stocks = get_ticker_symbols()
         period = "3mo"
         stocks_dfs_dict = {
             stock: yf.Ticker(stock).history(
@@ -29,10 +25,8 @@ class StonksAutoTS:
     @staticmethod
     def __get_last_weekday(date):
         last_weekday = date
-
         while last_weekday.weekday() > 4:
             last_weekday -= timedelta(days=1)
-
         return str(last_weekday.date())
 
     @staticmethod
@@ -41,10 +35,6 @@ class StonksAutoTS:
         yf_df["DateCol"] = yf_df.apply(lambda row: row.name, axis=1)
         return yf_df
 
-    @staticmethod
-    def __dump_path(save_location, ticker_name, name, predictionTarget):
-        return f"{save_location}/{f'{ticker_name}_{name}_{predictionTarget.lower()}'}.joblib"
-
     @classmethod
     def __train_model(cls, save_location, ticker_name, ticker_dfs, predictionTarget):
         model = AutoTSConfigs.create_model_lambda(cls.selectedMode)().fit(
@@ -52,24 +42,21 @@ class StonksAutoTS:
             date_col="DateCol",
             value_col=predictionTarget,
         )
-        prediction = model.predict()
-        forecasts = prediction.forecast
-        model_results = model.results()
-        validation_results = model.results("validation")
 
-        variables_to_be_saved = {
+        artifacts = {
             "model": model,
-            "prediction": prediction,
-            "forecasts": forecasts,
-            "model_results": model_results,
-            "validation_results": validation_results,
+            "prediction": model.predict(),
+            "forecasts": model.predict().forecast,
+            "model_results": model.results(),
+            "validation_results": model.results("validation"),
         }
 
         [
             dump(
-                var, cls.__dump_path(save_location, ticker_name, name, predictionTarget)
+                artifact,
+                f"{save_location}/{f'{ticker_name}_{artifact_name}_{predictionTarget.lower()}'}.joblib",
             )
-            for name, var in variables_to_be_saved.items()
+            for artifact_name, artifact in artifacts.items()
         ]
 
     @classmethod
@@ -94,10 +81,3 @@ class StonksAutoTS:
             ticker_dfs = cls.__set_date_on_yf_df(ticker_dfs)
             cls.__train_model(absolute_dump_directory, ticker_name, ticker_dfs, "Open")
             cls.__train_model(absolute_dump_directory, ticker_name, ticker_dfs, "Close")
-
-
-if __name__ == "__main__":
-    StonksAutoTS.train_stonks()
-    from cli_read_results import generate_results
-
-    generate_results()
