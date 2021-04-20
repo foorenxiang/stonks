@@ -136,3 +136,7 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# autogluon artifacts
+ag_sst
+my_saved_dir
