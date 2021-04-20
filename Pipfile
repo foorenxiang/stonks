@@ -9,7 +9,8 @@ yfinance = "*"
 autots = "*"
 sklearn = "*"
 varname = "*"
-mxnet = "<2.0.0"
+matplotlib = "*"
+mxnet_cu101 = "<2.0.0"
 autogluon = "*"
 
 [dev-packages]
