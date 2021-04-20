@@ -11,54 +11,37 @@ np.random.seed(123)
 from autogluon.core.utils.loaders.load_pd import load
 import joblib
 
-# try:
-#     train_data = joblib.load("./autogluon_data/train_data.joblib")
-# except FileNotFoundError:
-#     try:
-#         train_data = load(
-#             "https://autogluon-text.s3-accelerate.amazonaws.com/glue/sst/train.parquet"
-#         )
-#         joblib.dump(train_data, "./autogluon_data/train_data.joblib")
-#     except FileNotFoundError:
-#         pass
-
-# try:
-#     test_data = joblib.load("./autogluon_data/test_data.joblib")
-# except Exception:
-#     try:
-#         test_data = load(
-#             "https://autogluon-text.s3-accelerate.amazonaws.com/glue/sst/dev.parquet"
-#         )
-#         joblib.dump(test_data, "./autogluon_data/test_data.joblib")
-#     except FileNotFoundError:
-#         pass
-#     except Exception:
-#         raise
-
-train_data = load(
-    "https://autogluon-text.s3-accelerate.amazonaws.com/glue/sst/train.parquet"
-)
+# train_data = load(
+#     "https://autogluon-text.s3-accelerate.amazonaws.com/glue/sst/train.parquet"
+# )
 test_data = load(
     "https://autogluon-text.s3-accelerate.amazonaws.com/glue/sst/dev.parquet"
 )
 
-subsample_size = (
-    1000  # subsample data for faster demo, try setting this to larger values
-)
-train_data = train_data.sample(n=subsample_size, random_state=0)
-train_data.head(10)
+# train_data.head(10)
 
-"""training"""
+# """training"""
+# from autogluon.text import TextPredictor
+
+# predictor = TextPredictor(label="label", eval_metric="acc", path="./ag_sst")
+# predictor.fit(train_data, time_limit=60)
+
+# """Evaluation"""
+# test_score = predictor.evaluate(test_data, metrics=["acc", "f1"])
+# print(test_score)
+
+"""Intermediate Results"""
+# predictor.results.tail(3)
+
 from autogluon.text import TextPredictor
 
-predictor = TextPredictor(label="label", eval_metric="acc", path="./ag_sst")
-predictor.fit(train_data, time_limit=60)
+predictor = TextPredictor.load("./ag_sst/")
 
-"""Evaluation"""
-test_score = predictor.evaluate(test_data, metrics=["acc", "f1"])
-print(test_score)
 
 """Direct prediction (Boolean)"""
+# sentence1 = "it's a charming and often affecting journey."
+# sentence2 = "It's slow, very, very, very slow."
+
 sentence1 = "it's a charming and often affecting journey."
 sentence2 = "It's slow, very, very, very slow."
 predictions = predictor.predict({"sentence": [sentence1, sentence2]})
@@ -70,8 +53,6 @@ probs = predictor.predict_proba({"sentence": [sentence1, sentence2]})
 print('"Sentence":', sentence1, '"Predicted Class-Probabilities":', probs[0])
 print('"Sentence":', sentence2, '"Predicted Class-Probabilities":', probs[1])
 
-"""Intermediate Results"""
-predictor.results.tail(3)
 
 """Save and load"""
 loaded_predictor = TextPredictor.load("ag_sst")  # load automatically saved predictor"
