@@ -1,0 +1,35 @@
+01:34:22,646 root INFO NumPy-shape semantics has been activated in your code. This is required for creating and manipulating scalar and zero-size tensors, which were not supported in MXNet before, as in the official NumPy library. Please DO NOT manually deactivate this semantics while using `mxnet.numpy` and `mxnet.numpy_extension` modules.
+01:34:26,632 root INFO "Sentence": it's a charming and often affecting journey.      "Predicted Sentiment": positive
+01:34:26,632 root INFO "Sentence": It's slow, very, very, very slow.      "Predicted Sentiment": negative
+01:34:26,632 root INFO "Sentence": happy      "Predicted Sentiment": positive
+01:34:26,632 root INFO "Sentence": sad      "Predicted Sentiment": negative
+01:34:26,632 root INFO "Sentence": oh no      "Predicted Sentiment": negative
+01:34:26,632 root INFO "Sentence": :O      "Predicted Sentiment": positive
+01:34:26,632 root INFO "Sentence": omg      "Predicted Sentiment": negative
+01:34:26,632 root INFO "Sentence": diamond hands      "Predicted Sentiment": positive
+01:34:26,632 root INFO "Sentence": paper hands      "Predicted Sentiment": negative
+01:34:26,632 root INFO "Sentence": lit stocks      "Predicted Sentiment": positive
+01:34:26,632 root INFO "Sentence": to the moon      "Predicted Sentiment": positive
+01:34:26,632 root INFO "Sentence": gamestop      "Predicted Sentiment": positive
+01:34:26,632 root INFO "Sentence": losses      "Predicted Sentiment": negative
+01:34:26,632 root INFO "Sentence": roaring kitty      "Predicted Sentiment": positive
+01:34:26,632 root INFO "Sentence": yolo      "Predicted Sentiment": negative
+01:34:26,633 root INFO "Sentence": bagholder      "Predicted Sentiment": positive
+01:34:26,633 root INFO "Sentence": tendies      "Predicted Sentiment": positive
+01:34:26,971 root INFO "Sentence": it's a charming and often affecting journey.      "Predicted Sentiment Probability": 0.9567457437515259
+01:34:26,971 root INFO "Sentence": It's slow, very, very, very slow.      "Predicted Sentiment Probability": -0.5583480000495911
+01:34:26,972 root INFO "Sentence": happy      "Predicted Sentiment Probability": 0.684893012046814
+01:34:26,972 root INFO "Sentence": sad      "Predicted Sentiment Probability": -0.579154372215271
+01:34:26,972 root INFO "Sentence": oh no      "Predicted Sentiment Probability": -0.7659097909927368
+01:34:26,972 root INFO "Sentence": :O      "Predicted Sentiment Probability": 0.006906867027282715
+01:34:26,972 root INFO "Sentence": omg      "Predicted Sentiment Probability": -0.7647994756698608
+01:34:26,972 root INFO "Sentence": diamond hands      "Predicted Sentiment Probability": 0.6933037042617798
+01:34:26,972 root INFO "Sentence": paper hands      "Predicted Sentiment Probability": -0.11878383159637451
+01:34:26,972 root INFO "Sentence": lit stocks      "Predicted Sentiment Probability": 0.1694117784500122
+01:34:26,972 root INFO "Sentence": to the moon      "Predicted Sentiment Probability": 0.10076725482940674
+01:34:26,972 root INFO "Sentence": gamestop      "Predicted Sentiment Probability": 0.766252875328064
+01:34:26,972 root INFO "Sentence": losses      "Predicted Sentiment Probability": -0.7743488699197769
+01:34:26,972 root INFO "Sentence": roaring kitty      "Predicted Sentiment Probability": 0.6512774229049683
+01:34:26,972 root INFO "Sentence": yolo      "Predicted Sentiment Probability": -0.8146378397941589
+01:34:26,972 root INFO "Sentence": bagholder      "Predicted Sentiment Probability": 0.39516663551330566
+01:34:26,972 root INFO "Sentence": tendies      "Predicted Sentiment Probability": 0.026921987533569336
