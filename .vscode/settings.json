@@ -1,5 +1,7 @@
 {
   "python.formatting.provider": "black",
-  "python.pythonPath": "/Users/foorx/.local/share/virtualenvs/stonks-CZNjmA0O/bin/python",
-  "editor.tabSize": 4
+  "editor.tabSize": 4,
+  "python.linting.pylintEnabled": true,
+  "python.linting.enabled": true,
+  "python.linting.flake8Enabled": false
 }
