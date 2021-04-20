@@ -1,7 +1,13 @@
 import logging
 from autogluon.text import TextPredictor
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    filename="./StonksML/logs/autogluon_prediction.log",
+    filemode="w",
+    format="%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s",
+    datefmt="%H:%M:%S",
+)
 logger = logging.getLogger()
 
 predictor = TextPredictor.load("./ag_sst/")
