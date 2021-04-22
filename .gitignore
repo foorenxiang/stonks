@@ -139,3 +139,7 @@ cython_debug/
 # autogluon artifacts
 ag_sst
 my_saved_dir
+
+*autogluon_model
+
+datasets/
