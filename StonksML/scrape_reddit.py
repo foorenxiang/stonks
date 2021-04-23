@@ -1,3 +1,5 @@
+# Modified from https://medium.com/analytics-vidhya/praw-a-python-package-to-scrape-reddit-post-data-b759a339ed9a
+
 import logging
 from pathlib import Path
 from dotenv import load_dotenv
@@ -84,7 +86,6 @@ def scrape_reddit():
     df = pd.DataFrame(
         {
             "Subreddit": subred_list,
-            # "ID": id_list,
             "Title": title_list,
             "Count_of_Comments": num_comments_list,
             "Upvote_Count": score_list,
