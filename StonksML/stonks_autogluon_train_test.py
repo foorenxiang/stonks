@@ -13,7 +13,10 @@ import joblib
 
 file_dir = Path(__file__).resolve().parent
 model_save_path = file_dir / "autogluon_model"
-model_save_path.mkdir()
+try:
+    model_save_path.mkdir()
+except FileExistsError:
+    pass
 
 logging.basicConfig(
     level=logging.INFO,
