@@ -3,83 +3,104 @@ from pathlib import Path
 from dotenv import load_dotenv
 from os import environ as env
 import praw
+from datetime import datetime
 import pandas as pd
 from joblib import dump
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    handlers=[
+        logging.FileHandler(
+            filename=Path(__file__).resolve().parent / "reddit_scrape.log", mode="w"
+        ),
+        logging.StreamHandler(),
+    ],
+)
 logger = logging.getLogger(__name__)
 
-current_directory = Path(__file__).resolve().parent
-save_directory = current_directory.parent / "datasets" / "reddit_dump"
 
-try:
-    save_directory.mkdir()
-except FileExistsError:
-    pass
+def scrape_reddit():
+    current_directory = Path(__file__).resolve().parent
+    save_directory = current_directory.parent / "datasets" / "reddit_dump"
 
-load_dotenv()
+    try:
+        save_directory.mkdir()
+    except FileExistsError:
+        pass
 
-REDDIT_PERSONAL_USE_SCRIPT = env["REDDIT_PERSONAL_USE_SCRIPT"]
-REDDIT_SECRET = env["REDDIT_SECRET"]
-REDDIT_USERNAME = env["REDDIT_USERNAME"]
-REDDIT_PASSWORD = env["REDDIT_PASSWORD"]
-REDDIT_USERAGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36"
+    load_dotenv()
 
-reddit = praw.Reddit(
-    client_id=REDDIT_PERSONAL_USE_SCRIPT,
-    client_secret=REDDIT_SECRET,
-    usernme=REDDIT_USERNAME,
-    password=REDDIT_PASSWORD,
-    user_agent=REDDIT_USERAGENT,
-)
+    REDDIT_PERSONAL_USE_SCRIPT = env["REDDIT_PERSONAL_USE_SCRIPT"]
+    REDDIT_SECRET = env["REDDIT_SECRET"]
+    REDDIT_USERNAME = env["REDDIT_USERNAME"]
+    REDDIT_PASSWORD = env["REDDIT_PASSWORD"]
+    REDDIT_USERAGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36"
 
-author_list = []
-id_list = []
-link_flair_text_list = []
-num_comments_list = []
-score_list = []
-title_list = []
-upvote_ratio_list = []
+    reddit = praw.Reddit(
+        client_id=REDDIT_PERSONAL_USE_SCRIPT,
+        client_secret=REDDIT_SECRET,
+        usernme=REDDIT_USERNAME,
+        password=REDDIT_PASSWORD,
+        user_agent=REDDIT_USERAGENT,
+    )
 
-subreddit_list = [
-    # "singapore",
-    # "worldnews",
-    "wallstreetbets",
-    "ocugen",
-    "teslainvestorsclub",
-    "SPACs",
-]
+    subred_list = []
+    author_list = []
+    id_list = []
+    link_flair_text_list = []
+    num_comments_list = []
+    score_list = []
+    title_list = []
+    upvote_ratio_list = []
 
-for subred in subreddit_list:
-    subreddit = reddit.subreddit(subred)
-    hot_post = subreddit.hot(limit=10000)
+    subreddit_list = [
+        "wallstreetbets",
+        "ocugen",
+        "teslainvestorsclub",
+        "SPACs",
+        "worldnews",
+        "singapore",
+    ]
 
-    for sub in hot_post:
-        author_list.append(sub.author)
-        id_list.append(sub.id)
-        link_flair_text_list.append(sub.link_flair_text)
-        num_comments_list.append(sub.num_comments)
-        score_list.append(sub.score)
-        title_list.append(sub.title)
-        upvote_ratio_list.append(sub.upvote_ratio)
+    logger.info(f"Started scrapping at {datetime.now()}")
 
-    print(subred, "completed; ", end="")
-    print("total", len(author_list), "posts has been scraped")
+    for subred in subreddit_list:
+        logger.info(f"Starting to scrape {subred.upper()}")
+        subreddit = reddit.subreddit(subred)
+        hot_post = subreddit.hot(limit=10000)
 
-df = pd.DataFrame(
-    {
-        "ID": id_list,
-        "Author": author_list,
-        "Title": title_list,
-        "Count_of_Comments": num_comments_list,
-        "Upvote_Count": score_list,
-        "Upvote_Ratio": upvote_ratio_list,
-        "Flair": link_flair_text_list,
-    }
-)
+        for sub in hot_post:
+            subred_list.append(subred)
+            author_list.append(sub.author)
+            # id_list.append(sub.id)
+            link_flair_text_list.append(sub.link_flair_text)
+            num_comments_list.append(sub.num_comments)
+            score_list.append(sub.score)
+            title_list.append(sub.title)
+            upvote_ratio_list.append(sub.upvote_ratio)
+
+        logger.info(f"Scraped {len(title_list)} posts from {subred}")
+
+    df = pd.DataFrame(
+        {
+            "Subreddit": subred_list,
+            # "ID": id_list,
+            "Title": title_list,
+            "Count_of_Comments": num_comments_list,
+            "Upvote_Count": score_list,
+            "Upvote_Ratio": upvote_ratio_list,
+            "Flair": link_flair_text_list,
+            "Author": author_list,
+        }
+    )
+
+    df.to_csv(save_directory / "reddit_dataset.csv", index=False)
+
+    dump(df, save_directory / "reddit_dataset.joblib")
 
 
-df.to_csv(save_directory / "reddit_dataset.csv", index=False)
+if __name__ == "__main__":
+    scrape_reddit()
+    from reddit_sentiment_analysis import reddit_sentiment_analysis
 
-
-dump(df, save_directory / "redddit_dataset.joblib")
+    reddit_sentiment_analysis()
