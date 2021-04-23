@@ -12,11 +12,14 @@ varname = "*"
 matplotlib = "*"
 mxnet_cu101 = "<2.0.0"
 autogluon = "*"
+praw = "*"
+python-dotenv = "*"
 
 [dev-packages]
 black = "*"
 pytest = "*"
 watchdog = "*"
+rope = "*"
 
 [requires]
 python_version = "3.8"
@@ -25,6 +28,8 @@ python_version = "3.8"
 allow_prereleases = true
 
 [scripts]
-autots_train = "python3 StonksAutoTS/stonks_autots.py"
-autots_results = "python3 StonksAutoTS/cli_read_results.py"
-autots_clean = "python3 StonksAutoTS/clean_model_dumps.py"
+autots_train = "python3 StonksML/stonks_autots.py"
+autots_results = "python3 StonksML/cli_read_results.py"
+autots_clean = "python3 StonksML/clean_model_dumps.py"
+autogluon_twitter_train = "python3 StonksML/stonks_autogluon_train_test.py"
+autogluon_twitter_predict = "python3 StonksML/stonks_autogluon_predict.py"

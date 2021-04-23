@@ -1,0 +1,17 @@
+INFO:__main__:Started scrapping at 2021-04-24 00:46:09.879476
+INFO:__main__:Starting to scrape WALLSTREETBETS
+INFO:__main__:Scraped 165 posts from wallstreetbets
+INFO:__main__:Starting to scrape OCUGEN
+INFO:__main__:Scraped 1040 posts from ocugen
+INFO:__main__:Starting to scrape TESLAINVESTORSCLUB
+INFO:__main__:Scraped 1837 posts from teslainvestorsclub
+INFO:__main__:Starting to scrape SPACS
+INFO:__main__:Scraped 2418 posts from SPACs
+INFO:__main__:Starting to scrape WORLDNEWS
+INFO:__main__:Scraped 3172 posts from worldnews
+INFO:__main__:Starting to scrape SINGAPORE
+INFO:__main__:Scraped 3837 posts from singapore
+__main__:Starting to scrape <built-in method upper of str object at 0x7f1fe46a0670>
+INFO:__main__:Scraped 3172 posts from worldnews
+INFO:__main__:Starting to scrape <built-in method upper of str object at 0x7f1fe46a06b0>
+INFO:__main__:Scraped 3837 posts from singapore

@@ -1,0 +1,24 @@
+INFO:root:NumPy-shape semantics has been activated in your code. This is required for creating and manipulating scalar and zero-size tensors, which were not supported in MXNet before, as in the official NumPy library. Please DO NOT manually deactivate this semantics while using `mxnet.numpy` and `mxnet.numpy_extension` modules.
+INFO:root:         Subreddit                                              Title         Sentiment  Sentiment_score  ...  Upvote_Count  Upvote_Ratio             Flair                Author
+0   wallstreetbets         Daily Discussion Thread for April 23, 2021          Positive                1  ...           254          0.67  Daily Discussion  OPINION_IS_UNPOPULAR
+1   wallstreetbets       Scam Alert: Wallstreetbets Telegram / Crypto  Neutral/Negative                0  ...         12521          0.95              Mods  OPINION_IS_UNPOPULAR
+2   wallstreetbets        Watching your positions at close be like...  Neutral/Negative                0  ...         15220          0.94              Meme         newmacbookpro
+3   wallstreetbets                                 Why am I like this          Positive                1  ...          3215          0.98              Meme                Renoxo
+4   wallstreetbets                     All-in MVIS before it was cool  Neutral/Negative                0  ...         14381          0.90              YOLO         mike-oxlong98
+5   wallstreetbets                Ken Griffen and his precious shorts          Positive                1  ...           401          0.95              Meme       ShootFromTheDip
+6   wallstreetbets       $AMD earnings coming for at long term winner          Positive                1  ...           526          0.89                DD   AstronautCurrent408
+7   wallstreetbets  Literally everyone across the reddit trading c...  Neutral/Negative                0  ...          1323          0.84              News            ledgendary
+8   wallstreetbets  From $160K to $3.2M: Current YOLOs on GENI, VI...          Positive                1  ...          4280          0.91              YOLO    RetardedDungBeatle
+9   wallstreetbets               1 Day YOLO - Got it this morning 🚀🚀🚀          Positive                1  ...           153          0.85              YOLO           chicago1313
+10  wallstreetbets    Investing with Lil Boat, DD based on the album.          Positive                1  ...           666          0.89          Shitpost          bonejohnson8
+11  wallstreetbets               [LEAKED] WSB Top Minds Developing DD          Positive                1  ...         47302          0.87              Meme          bazingamayne
+12  wallstreetbets  OCGN - holding since June last year, wish I ha...  Neutral/Negative                0  ...           107          0.91              Gain             aosterdyk
+13  wallstreetbets  Stocks sink after report says Biden will propo...  Neutral/Negative                0  ...          4345          0.92              News                heapsp
+14  wallstreetbets  PSA all of the remaining insider shares of NKL...  Neutral/Negative                0  ...            53          0.91                DD             sleepysol
+15  wallstreetbets                       $NIO new Buy at CLSA, PT $50  Neutral/Negative                0  ...            84          0.75              News          OlderWiseGuy
+16  wallstreetbets  Hot Stock: Ocugen 🌧🌧 (Latest importer of COVID...          Positive                1  ...            39          0.83              News             Rarman999
+17  wallstreetbets                   Weekly AMC YOLO update - holding  Neutral/Negative                0  ...          3084          0.90              YOLO    BunDogGrillionaire
+18  wallstreetbets                                MVIS YOLO to Saturn          Positive                1  ...          1045          0.83              YOLO         not_not_smart
+19  wallstreetbets        HYLN Part 3: Basket SPACs and Short Reports          Positive                1  ...            34          0.80                DD           Sciencetist
+
+[20 rows x 9 columns]
