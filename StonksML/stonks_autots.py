@@ -1,3 +1,6 @@
+# modified from https://towardsdatascience.com/train-multiple-time-series-forecasting-models-in-one-line-of-python-code-615f2253b67a
+# modified from https://towardsdatascience.com/how-to-get-stock-data-using-python-c0de1df17e75
+
 import yfinance as yf
 from joblib import dump
 from pathlib import Path
