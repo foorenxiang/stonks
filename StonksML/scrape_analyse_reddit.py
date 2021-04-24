@@ -1,9 +1,9 @@
-from scrape_reddit import ScrapeReddit
+from scrape_reddit import scrape
 from reddit_sentiment_analysis import reddit_sentiment_analysis
 
 
 def scrape_analyse_reddit():
-    ScrapeReddit.scrape()
+    scrape()
     reddit_sentiment_analysis()
 
 

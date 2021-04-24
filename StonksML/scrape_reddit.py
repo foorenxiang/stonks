@@ -37,7 +37,7 @@ def get_save_directory(datasets_loc="datasets", reddit_dump_loc="reddit_dump"):
 class ScrapeReddit:
 
     save_directory = get_save_directory()
-    MAX_POSTS_PER_SUBREDDIT = 200
+    MAX_POSTS_PER_SUBREDDIT = 100
     subreddit_list = []
 
     @classmethod
@@ -98,14 +98,18 @@ class ScrapeReddit:
 
             subreddit_post_count = 0
             for sub in hot_post:
-                subred_list.append(subred)
-                author_list.append(sub.author)
-                link_flair_text_list.append(sub.link_flair_text)
-                num_comments_list.append(sub.num_comments)
-                score_list.append(sub.score)
-                title_list.append(sub.title)
-                upvote_ratio_list.append(sub.upvote_ratio)
-                subreddit_post_count += 1
+                # TODO: fix this flair filter and extract out to config
+                if not (
+                    sub.link_flair_text in ["Weekend Discussion", "Technical Analysis"]
+                ):
+                    subred_list.append(subred)
+                    author_list.append(sub.author)
+                    link_flair_text_list.append(sub.link_flair_text)
+                    num_comments_list.append(sub.num_comments)
+                    score_list.append(sub.score)
+                    title_list.append(sub.title)
+                    upvote_ratio_list.append(sub.upvote_ratio)
+                    subreddit_post_count += 1
 
             logger.info(f"Scraped {subreddit_post_count} posts from {subred.upper()}")
 
@@ -138,10 +142,8 @@ def scrape():
             "ocugen",
             "teslainvestorsclub",
             "SPACs",
-            "worldnews",
-            "singapore",
         ],
-        500,
+        50,
     )
     ScrapeReddit.scrape()
 
