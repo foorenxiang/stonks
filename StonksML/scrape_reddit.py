@@ -49,12 +49,12 @@ class ScrapeReddit:
         if subreddits:
             cls.subreddit_list = subreddits
             logger.info(
-                f"Configured ScrapeReddit with new subreddits: {cls.subreddit_list}"
+                f"Configured ScrapeReddit with subreddits: {cls.subreddit_list}"
             )
         if max_posts_per_subreddit > 5:
             cls.MAX_POSTS_PER_SUBREDDIT = max_posts_per_subreddit
             logger.info(
-                f"Configured ScrapeReddit with new max post limit of {cls.MAX_POSTS_PER_SUBREDDIT}"
+                f"Configured ScrapeReddit with max post limit of {cls.MAX_POSTS_PER_SUBREDDIT}"
             )
 
     @staticmethod
@@ -140,7 +140,8 @@ def scrape():
             "SPACs",
             "worldnews",
             "singapore",
-        ]
+        ],
+        500,
     )
     ScrapeReddit.scrape()
 
