@@ -40,6 +40,7 @@ class ScrapeReddit:
     subreddit_list = []
     flair_filters = []
     __posts = {}
+    __posts_df = None
 
     @classmethod
     def config(
@@ -84,8 +85,11 @@ class ScrapeReddit:
 
     @classmethod
     def is_valid_flair(cls, flair):
-        if not flair:
+        try:
+            flair.upper()
+        except AttributeError:
             return True
+
         for filter in cls.flair_filters:
             if filter.upper() in flair.upper():
                 return False
@@ -142,20 +146,6 @@ class ScrapeReddit:
             "Author": author_list,
         }
 
-    @staticmethod
-    def __flairs(posts_df):
-        try:
-            assert not posts_df.empty
-        except AssertionError:
-            logger.warn("No posts to check!")
-            return
-        except AttributeError:
-            logger.error("flairs expect a dataframe!")
-            raise
-        flairs = posts_df["Flair"].unique()
-        logger.info("Flairs:")
-        [logger.info(flair) for flair in flairs]
-
     @classmethod
     def __posts_ETL(cls):
         try:
@@ -164,16 +154,28 @@ class ScrapeReddit:
             logger.error("No posts scraped yet!")
             return
 
-        posts_df = pd.DataFrame(cls.__posts)
-        cls.__flairs(posts_df)
-        posts_df.to_csv(cls.save_directory / "reddit_dataset.csv", index=False)
+        cls.__posts_df = pd.DataFrame(cls.__posts)
+        cls.__posts_df.to_csv(cls.save_directory / "reddit_dataset.csv")
+        dump(cls.__posts_df, cls.save_directory / "reddit_dataset.joblib")
 
-        dump(posts_df, cls.save_directory / "reddit_dataset.joblib")
+    @classmethod
+    def __flairs(cls):
+        try:
+            assert not cls.__posts_df.empty
+        except (AssertionError, AttributeError):
+            logger.warning("No posts to check!")
+            return
+
+        flairs = cls.__posts_df["Flair"].unique()
+        logger.info("Flairs:")
+        for flair in flairs:
+            logger.info(flair)
 
     @classmethod
     def scrape(cls):
         cls.__retrieve_posts()
         cls.__posts_ETL()
+        cls.__flairs()
 
 
 def scrape():
