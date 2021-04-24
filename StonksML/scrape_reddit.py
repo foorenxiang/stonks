@@ -8,6 +8,7 @@ import praw
 from datetime import datetime
 import pandas as pd
 from joblib import dump
+from typing import Optional, List
 
 logging.basicConfig(
     level=logging.INFO,
@@ -37,17 +38,14 @@ class ScrapeReddit:
 
     save_directory = get_save_directory()
     MAX_POSTS_PER_SUBREDDIT = 200
-    subreddit_list = [
-        "wallstreetbets",
-        "ocugen",
-        "teslainvestorsclub",
-        "SPACs",
-        "worldnews",
-        "singapore",
-    ]
+    subreddit_list = []
 
     @classmethod
-    def config(cls, subreddits: list, max_posts_per_subreddit: int) -> bool:
+    def config(
+        cls,
+        subreddits: Optional[List[str]] = [],
+        max_posts_per_subreddit: Optional[int] = -1,
+    ) -> bool:
         if subreddits:
             cls.subreddit_list = subreddits
             logger.info(
@@ -134,6 +132,16 @@ class ScrapeReddit:
 
 
 def scrape():
+    ScrapeReddit.config(
+        [
+            "wallstreetbets",
+            "ocugen",
+            "teslainvestorsclub",
+            "SPACs",
+            "worldnews",
+            "singapore",
+        ]
+    )
     ScrapeReddit.scrape()
 
 
