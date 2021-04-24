@@ -32,16 +32,14 @@ logger = logging.getLogger()
 
 
 def reddit_sentiment_analysis():
-    model_save_path = Path(__file__).resolve().parent / "autogluon_model"
+    model_save_path = current_directory / "autogluon_model"
     predictor = TextPredictor.load(model_save_path)
 
-    current_directory = Path(__file__).resolve().parent
-    reddit_dump_location = (
-        current_directory.parent / "datasets" / "reddit_dump" / "reddit_dataset.joblib"
-    )
-
+    reddit_dump_location = save_directory / "reddit_dataset.joblib"
     reddit_dump_df = load(reddit_dump_location)
+
     sentiment_scores = predictor.predict({"sentence": reddit_dump_df["Title"]})
+
     sentiment_literal = sentiment_scores.replace(
         to_replace=0, value="Neutral/Negative"
     ).replace(to_replace=1, value="Positive")
@@ -55,8 +53,9 @@ def reddit_sentiment_analysis():
         column="Sentiment",
         value=sentiment_literal,
     )
+
     logger.info(reddit_dump_df.head(20))
-    reddit_dump_df.to_csv(save_directory / "reddit_sentiment_analysis.csv", index=False)
+    reddit_dump_df.to_csv(save_directory / "reddit_sentiment_analysis.csv")
     dump(reddit_dump_df, save_directory / "reddit_sentiment_analysis.joblib")
 
 
