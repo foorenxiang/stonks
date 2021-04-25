@@ -6,7 +6,7 @@ from joblib import dump
 from pathlib import Path
 from datetime import datetime, timedelta
 from ticker_symbols import get_ticker_symbols
-from AutoTSConfigs import AutoTSConfigs
+from autots_config import AutoTSConfigs
 from utils.exec_time import exec_time
 
 
