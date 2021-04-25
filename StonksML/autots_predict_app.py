@@ -1,5 +1,5 @@
 from stonks_autots import StonksAutoTS
-from cli_read_results import generate_results
+from autots_cli_read_results import generate_results
 
 import logging
 
@@ -8,6 +8,6 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":autots_predict
     StonksAutoTS.train_stonks()
     generate_results()
