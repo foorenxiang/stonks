@@ -9,5 +9,4 @@ logger.setLevel(logging.INFO)
 
 
 if __name__ == "__main__":
-    StonksAutoTS.train_stonks()
-    generate_results()
+    pass
