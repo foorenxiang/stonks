@@ -18,6 +18,7 @@ gluonts = "*"
 numexpr = "*"
 cd = "*"
 orjson = "*"
+tensorflow = "*"
 
 [dev-packages]
 black = "*"
