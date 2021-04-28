@@ -33,6 +33,7 @@ logger = logging.getLogger(__file__)
 class StonksAutoTS:
     selectedMode = None
     __forecasts_generated_by_training = []
+    __dataset_is_long = False  # True if only estimating based on pure time series, false if estimating based on other features in timeseries (wide dataset)
 
     @classmethod
     def __get_stocks_data(cls):
@@ -60,10 +61,19 @@ class StonksAutoTS:
         return yf_df
 
     @classmethod
-    def __train_model(cls, save_location, ticker_name, ticker_dfs, predictionTarget):
+    def __train_model(
+        cls, save_location, ticker_name, ticker_dfs, predictionTarget=None
+    ):
+        if predictionTarget:
+            logger.info(
+                f"Training model for {ticker_name} with {predictionTarget} prediction target"
+            )
+        else:
+            logger.info(f"Training model for {ticker_name} with wide features")
+
         model = AutoTSConfigs.create_model_lambda(cls.selectedMode)().fit(
             ticker_dfs,
-            date_col="DateCol",
+            date_col="DateCol" if predictionTarget else None,
             value_col=predictionTarget,
         )
 
@@ -83,7 +93,7 @@ class StonksAutoTS:
         [
             dump(
                 artifact,
-                f"{save_location}/{f'{ticker_name}_{artifact_name}_{predictionTarget.lower()}'}.joblib",
+                f"""{save_location}/{f"{ticker_name}_{artifact_name}_{predictionTarget.lower() if predictionTarget else 'wide_dataset'}"}.joblib""",
             )
             for artifact_name, artifact in artifacts.items()
         ]
@@ -118,7 +128,7 @@ class StonksAutoTS:
     def train_stonks(cls):
         ticker_dfs = cls.__get_stocks_data()
 
-        cls.selectedMode = AutoTSConfigs.DEFAULT
+        cls.selectedMode = AutoTSConfigs.FAST
         print(f"Training with {cls.selectedMode} mode")
 
         detected_num_cores = numexpr.detect_number_of_cores()
@@ -128,8 +138,15 @@ class StonksAutoTS:
         absolute_dump_directory = cls.__create_model_dump_directories()
         for ticker_name, ticker_dfs in ticker_dfs.items():
             ticker_dfs = cls.__set_date_on_yf_df(ticker_dfs)
-            cls.__train_model(absolute_dump_directory, ticker_name, ticker_dfs, "Open")
-            cls.__train_model(absolute_dump_directory, ticker_name, ticker_dfs, "Close")
+            if cls.__dataset_is_long:
+                cls.__train_model(
+                    absolute_dump_directory, ticker_name, ticker_dfs, "Open"
+                )
+                cls.__train_model(
+                    absolute_dump_directory, ticker_name, ticker_dfs, "Close"
+                )
+            else:
+                cls.__train_model(absolute_dump_directory, ticker_name, ticker_dfs)
 
 
 def train_stonks():
