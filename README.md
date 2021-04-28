@@ -1,3 +1,3 @@
 # Streamlit Stonks
 
-Coding practice project involving streamlit, autots, auto-nlp
+Coding practice project involving streamlit, autots, autogluon
