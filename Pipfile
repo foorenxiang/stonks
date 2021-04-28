@@ -17,6 +17,7 @@ python-dotenv = "*"
 gluonts = "*"
 numexpr = "*"
 cd = "*"
+orjson = "*"
 
 [dev-packages]
 black = "*"
