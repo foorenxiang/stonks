@@ -1,4 +1,4 @@
-from stonks_autots import StonksAutoTS
+from autots_train import StonksAutoTS
 from autots_cli_read_results import generate_results
 
 import logging
