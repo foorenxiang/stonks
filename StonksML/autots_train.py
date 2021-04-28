@@ -6,6 +6,8 @@ from joblib import dump
 from pathlib import Path
 from datetime import datetime, timedelta
 from ticker_symbols import get_ticker_symbols
+import numexpr
+import os
 from autots_config import AutoTSConfigs
 from utils.exec_time import exec_time
 import logging
@@ -116,8 +118,12 @@ class StonksAutoTS:
     def train_stonks(cls):
         ticker_dfs = cls.__get_stocks_data()
 
-        cls.selectedMode = AutoTSConfigs.FAST
+        cls.selectedMode = AutoTSConfigs.DEFAULT
         print(f"Training with {cls.selectedMode} mode")
+
+        detected_num_cores = numexpr.detect_number_of_cores()
+        logger.info(f"Number of cores detected on this machine: {detected_num_cores}")
+        os.environ["NUMEXPR_MAX_THREADS"] = str(detected_num_cores)
 
         absolute_dump_directory = cls.__create_model_dump_directories()
         for ticker_name, ticker_dfs in ticker_dfs.items():
