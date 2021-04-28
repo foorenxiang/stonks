@@ -8,6 +8,6 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-if __name__ == "__main__":autots_predict
+if __name__ == "__main__":
     StonksAutoTS.train_stonks()
     generate_results()
