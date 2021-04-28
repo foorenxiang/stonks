@@ -28,8 +28,8 @@ python_version = "3.8"
 allow_prereleases = true
 
 [scripts]
-autots_train = "python3 StonksML/stonks_autots.py"
-autots_results = "python3 StonksML/cli_read_results.py"
+autots_train = "python3 StonksML/autots_train.py"
+autots_results = "python3 StonksML/autots_cli_read_results.py"
 autots_clean = "python3 StonksML/clean_model_dumps.py"
-autogluon_twitter_train = "python3 StonksML/stonks_autogluon_train_test.py"
-autogluon_twitter_predict = "python3 StonksML/stonks_autogluon_predict.py"
+autogluon_twitter_train = "python3 StonksML/twitter_train_test.py"
+autogluon_twitter_predict = "python3 StonksML/twitter_sentiment_analysis.py"
