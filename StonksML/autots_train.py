@@ -128,7 +128,7 @@ class StonksAutoTS:
     def train_stonks(cls):
         ticker_dfs = cls.__get_stocks_data()
 
-        cls.selectedMode = AutoTSConfigs.FAST
+        cls.selectedMode = AutoTSConfigs.DEFAULT
         print(f"Training with {cls.selectedMode} mode")
 
         detected_num_cores = numexpr.detect_number_of_cores()

@@ -16,12 +16,16 @@ class AutoTSData:
     MODEL_RESULTS_CLOSE = "*model_results_close.joblib"
     PREDICTION_RESULTS_CLOSE = "*prediction_close.joblib"
     VALIDATION_RESULTS_CLOSE = "*validation_results_close.joblib"
+    FORECASTS_WIDE_DATASET = "*forecasts_wide_dataset.joblib"
 
     @staticmethod
     def __df_to_csv(file_data, model_dumps, stock_name, data_of_interest):
-        file_data.to_csv(
-            path_or_buf=(model_dumps / f"{stock_name}_{data_of_interest}.csv")
-        )
+        try:
+            file_data.to_csv(
+                path_or_buf=(model_dumps / f"{stock_name}_{data_of_interest}.csv")
+            )
+        except AttributeError:
+            logger.warning(f"{file_data} cannot be converted to csv, skipping...")
 
     @classmethod
     def print_autots_data(cls, data_of_interest, dump_folder=""):
@@ -69,6 +73,11 @@ class AutoTSData:
                 cls.__df_to_csv(
                     file_data, model_dumps, stock_name, data_of_interest_name
                 )
+            elif data_of_interest == cls.FORECASTS_WIDE_DATASET:
+                cls.__df_to_csv(
+                    file_data, model_dumps, stock_name, data_of_interest_name
+                )
+
             print("\n")
             print(stock_name)
             print(file_data)
@@ -77,6 +86,7 @@ class AutoTSData:
 def generate_results():
     AutoTSData.print_autots_data(AutoTSData.FORECASTS_OPEN)
     AutoTSData.print_autots_data(AutoTSData.FORECASTS_CLOSE)
+    AutoTSData.print_autots_data(AutoTSData.FORECASTS_WIDE_DATASET)
 
 
 if __name__ == "__main__":
