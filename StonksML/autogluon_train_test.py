@@ -4,6 +4,7 @@
 import numpy as np
 import warnings
 import pandas as pd
+import joblib
 import logging
 from pathlib import Path
 
@@ -31,30 +32,21 @@ warnings.filterwarnings("ignore")
 np.random.seed(123)
 
 dataset_folder = "datasets"
-dataset_name = "training.1600000.processed.noemoticon.csv"
-dataset_location = file_dir.resolve().parent / dataset_folder / dataset_name
+dataset_name = "full_preprocessed_reddit_twitter_dataset.joblib"
+dataset_location = (
+    file_dir.resolve().parent / dataset_folder / "preprocessed" / dataset_name
+)
 logger.info(f"Dataset: {dataset_location}")
 
-dataset_df = pd.read_csv(dataset_location)
-dataset_df.columns = ["target", "ids", "date", "flag", "user", "text"]
+dataset_df = joblib.load(dataset_location)[["sentence", "label"]]
 
-dataset_df = dataset_df[["text", "target"]]
-dataset_df.columns = ["sentence", "label"]
-
-dataset_df["label"].replace([0, 2, 4], [0, 0, 1], inplace=True)
-dataset_df = dataset_df.sample(frac=1).reset_index(drop=True)
-
-num_training_rows = 250000
+num_rows_to_extract = 110400
+num_test_rows = 10000
+num_training_rows = num_rows_to_extract - num_test_rows
 train_data = dataset_df.iloc[:num_training_rows]
-test_data = dataset_df.iloc[-5000:]
+test_data = dataset_df.iloc[-num_test_rows:]
 sample_data = dataset_df.sample(n=1000)
 logger.info(f"{num_training_rows} rows used for training")
-
-
-train_data.to_csv(file_dir / "train_data.csv")
-sample_data.to_csv(file_dir / "sample_data.csv")
-test_data.to_csv(file_dir / "test_data.csv")
-
 
 # train_data = load(
 # "https://autogluon-text.s3-accelerate.amazonaws.com/glue/sst/train.parquet"

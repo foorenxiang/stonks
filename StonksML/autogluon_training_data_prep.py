@@ -17,7 +17,7 @@ class SentimentalAnalysisDataPreprocessor:
         "Reddit_Data": r"Reddit_Data.csv",
         "Twitter_Data": r"Twitter_Data.csv",
     }
-    __unit_rows_to_take_per_dataset = int(36800 / 2)
+    __unit_rows_to_take_per_dataset = 36800
     __sources = {"twitter": "twitter", "reddit": "reddit"}
 
     @staticmethod
@@ -48,7 +48,7 @@ class SentimentalAnalysisDataPreprocessor:
             "name": dataset_name,
             "location": cls.__datasets_directory / dataset_name,
             "drop_duplicates": True,
-            "samples_to_take": cls.__unit_rows_to_take_per_dataset * 2,
+            "samples_to_take": cls.__unit_rows_to_take_per_dataset * 1,
         }
         dataset["df"] = (
             pd.read_csv(dataset["location"])
