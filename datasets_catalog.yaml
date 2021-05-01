@@ -1,10 +1,13 @@
 Datasets:
- - Sentiment Analysis based on tweets:
-    url: https://www.kaggle.com/kazanova/sentiment140
-    location: ./datasets/training.1600000.processed.noemoticon.csv
-      description: reddit
- - Multi-class Sentiment Analysis:
-    url: https://www.kaggle.com/cosmos98/twitter-and-reddit-sentimental-analysis-dataset?select=Twitter_Data.csv
-    location:
-      ./datasets/Reddit_Data.csv
-      ./datasets/Twitter_Data.csv
+- raw
+  - Sentiment Analysis based on tweets:
+      url: https://www.kaggle.com/kazanova/sentiment140
+      location: ./datasets/training.1600000.processed.noemoticon.csv
+        description: reddit
+  - Multi-class Sentiment Analysis:
+      url: https://www.kaggle.com/cosmos98/twitter-and-reddit-sentimental-analysis-dataset?select=Twitter_Data.csv
+      location:
+        ./datasets/Reddit_Data.csv
+        ./datasets/Twitter_Data.csv
+- preprocessed
+  - full_preprocessed_reddit_twitter_dataset.joblib
