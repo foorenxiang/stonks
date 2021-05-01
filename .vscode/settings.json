@@ -13,5 +13,6 @@
     "--select = B,C,E,F,W,T4,B9",
     "--max-complexity = 18"
   ],
-  "editor.wordWrap": "on"
+  "editor.wordWrap": "on",
+  "python.pythonPath": "/home/renxiang/.local/share/virtualenvs/streamlit_stonks-f5wpezrD/bin/python"
 }
