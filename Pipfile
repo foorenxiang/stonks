@@ -19,6 +19,7 @@ numexpr = "*"
 cd = "*"
 orjson = "*"
 tensorflow = "*"
+cuda = "*"
 
 [dev-packages]
 black = "*"
