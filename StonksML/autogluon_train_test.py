@@ -48,14 +48,6 @@ test_data = dataset_df.iloc[-num_test_rows:]
 sample_data = dataset_df.sample(n=1000)
 logger.info(f"{num_training_rows} rows used for training")
 
-# train_data = load(
-# "https://autogluon-text.s3-accelerate.amazonaws.com/glue/sst/train.parquet"
-# )
-
-# test_data = load(
-#     "https://autogluon-text.s3-accelerate.amazonaws.com/glue/sst/dev.parquet"
-# )
-
 
 """training"""
 from autogluon.text import TextPredictor
@@ -67,41 +59,3 @@ predictor.fit(train_data, time_limit=time_limit_in_secs)
 """Evaluation"""
 test_score = predictor.evaluate(test_data, metrics=["acc", "f1"])
 print(test_score)
-
-"""Intermediate Results"""
-# predictor.results.tail(3)
-
-
-"""Direct prediction (Boolean)"""
-sentence1 = "it's a charming and often affecting journey."
-sentence2 = "It's slow, very, very, very slow."
-predictions = predictor.predict({"sentence": [sentence1, sentence2]})
-print('"Sentence":', sentence1, '"Predicted Sentiment":', predictions[0])
-print('"Sentence":', sentence2, '"Predicted Sentiment":', predictions[1])
-
-"""Probabilistic predictions"""
-probs = predictor.predict_proba({"sentence": [sentence1, sentence2]})
-print('"Sentence":', sentence1, '"Predicted Class-Probabilities":', probs[0])
-print('"Sentence":', sentence2, '"Predicted Class-Probabilities":', probs[1])
-
-
-# """Save and load"""
-# loaded_predictor = TextPredictor.load("ag_sst")  # load automatically saved predictor"
-# loaded_predictor.predict_proba({"sentence": [sentence1, sentence2]})
-
-# """Saving to custom location"""
-# loaded_predictor.save("my_saved_dir")
-# loaded_predictor2 = TextPredictor.load("my_saved_dir")
-# loaded_predictor2.predict_proba({"sentence": [sentence1, sentence2]})
-
-"""Extract embedding"""
-# embeddings = predictor.extract_embedding(test_data)
-# print(embeddings)
-
-# from sklearn.manifold import TSNE
-
-# X_embedded = TSNE(n_components=2, random_state=123).fit_transform(embeddings)
-# for val, color in [(0, "red"), (1, "blue")]:
-#     idx = (test_data["label"].to_numpy() == val).nonzero()
-#     plt.scatter(X_embedded[idx, 0], X_embedded[idx, 1], c=color, label=f"label={val}")
-# plt.legend(loc="best")
