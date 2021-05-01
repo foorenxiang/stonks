@@ -22,7 +22,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def get_save_directory(datasets_loc="datasets", reddit_dump_loc="reddit_dump"):
+def get_save_directory(datasets_loc="datasets", reddit_dump_loc="raw"):
     current_directory = Path(__file__).resolve().parent
     save_directory = current_directory.parent / datasets_loc / reddit_dump_loc
 

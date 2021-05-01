@@ -11,13 +11,13 @@ logger = logging.getLogger(__name__)
 
 class SentimentalAnalysisDataPreprocessor:
     __current_directory = Path(__file__).resolve().parent
-    __datasets_directory = __current_directory.parent / "datasets"
+    __datasets_directory = __current_directory.parent / "datasets" / "raw"
     __training_datasets_name = {
         "training.1600000.processed.noemoticon": r"training.1600000.processed.noemoticon.csv",
         "Reddit_Data": r"Reddit_Data.csv",
         "Twitter_Data": r"Twitter_Data.csv",
     }
-    __unit_rows_to_take_per_dataset = int(36800 / 2)
+    __unit_rows_to_take_per_dataset = 36800
     __sources = {"twitter": "twitter", "reddit": "reddit"}
 
     @staticmethod
@@ -48,7 +48,7 @@ class SentimentalAnalysisDataPreprocessor:
             "name": dataset_name,
             "location": cls.__datasets_directory / dataset_name,
             "drop_duplicates": True,
-            "samples_to_take": cls.__unit_rows_to_take_per_dataset * 2,
+            "samples_to_take": cls.__unit_rows_to_take_per_dataset * 1,
         }
         dataset["df"] = (
             pd.read_csv(dataset["location"])
@@ -126,6 +126,13 @@ class SentimentalAnalysisDataPreprocessor:
 
     @classmethod
     def preprocess_all_datasets(cls):
+        try:
+            cls.__datasets_directory.mkdir()
+        except FileExistsError:
+            logger.info(
+                f"{cls.__datasets_directory} directory already exists, using it"
+            )
+
         logger.info(f"Datasets directory: {cls.__datasets_directory}")
         complete_dataset = pd.DataFrame({"sentence": [], "label": [], "source": []})
         _16_milion_tweets = cls.process_16_million_tweets()
@@ -140,17 +147,18 @@ class SentimentalAnalysisDataPreprocessor:
         )
 
         complete_dataset = cls.__process_shuffle_rows(complete_dataset)
-        train_split_fraction = 0.7
-        row_at_split = int(complete_dataset.shape[0] * train_split_fraction)
-        train_set, test_set = (
-            complete_dataset[:row_at_split],
-            complete_dataset[row_at_split:],
-        )
 
-        joblib.dump(train_set, cls.__datasets_directory / "twitter_reddit_train.joblib")
-        joblib.dump(test_set, cls.__datasets_directory / "twitter_reddit_test.joblib")
-        train_set.to_csv(cls.__datasets_directory / "twitter_reddit_train.csv")
-        test_set.to_csv(cls.__datasets_directory / "twitter_reddit_test.csv")
+        joblib.dump(
+            complete_dataset,
+            cls.__datasets_directory.parent
+            / "preprocessed"
+            / "full_preprocessed_reddit_twitter_dataset.joblib",
+        )
+        complete_dataset.to_csv(
+            cls.__datasets_directory.parent
+            / "preprocessed"
+            / "full_preprocessed_reddit_twitter_dataset.csv"
+        )
 
         cls.__df_describe(complete_dataset, "complete dataset")
 
