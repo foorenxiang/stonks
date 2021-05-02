@@ -5,7 +5,7 @@ from joblib import load, dump
 from autogluon.text import TextPredictor
 
 current_directory = Path(__file__).resolve().parent
-save_directory = current_directory.parent / "datasets" / "preprocessed" / "reddit_dump"
+save_directory = current_directory.parent / "datasets" / "preprocessed"
 
 
 try:
@@ -37,7 +37,7 @@ def reddit_sentiment_analysis():
     predictor = TextPredictor.load(model_save_path)
 
     reddit_dump_location = (
-        current_directory.parent / "datasets" / "raw" / "reddit_dataset.joblib"
+        current_directory.parent / "datasets" / "raw" / "latest_reddit_data.joblib"
     )
     reddit_dump_df = load(reddit_dump_location)
 

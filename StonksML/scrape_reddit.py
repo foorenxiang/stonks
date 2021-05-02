@@ -8,29 +8,33 @@ import praw
 from datetime import datetime
 import pandas as pd
 from joblib import dump
+from utils import paths_catalog
 from typing import Optional, List
 
-logging.basicConfig(
-    level=logging.INFO,
-    handlers=[
-        logging.FileHandler(
-            filename=Path(__file__).resolve().parent / "reddit_scrape.log", mode="w"
-        ),
-        logging.StreamHandler(),
-    ],
-)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler())
+
+CURRENT_DIRECTORY = Path(__file__).resolve().parent
+LOGGING_DIRECTORY = paths_catalog.SCRAPER_LOGS
+LOGFILE = "reddit_scrape.log"
+
+try:
+    LOGGING_DIRECTORY.mkdir()
+except FileExistsError:
+    print(f"{LOGGING_DIRECTORY} exists, using it")
+
+logger.addHandler(logging.FileHandler(filename=LOGGING_DIRECTORY / LOGFILE, mode="w"))
 
 
-def get_save_directory(datasets_loc="datasets", reddit_dump_loc="raw"):
-    current_directory = Path(__file__).resolve().parent
-    save_directory = current_directory.parent / datasets_loc / reddit_dump_loc
-
+def get_save_directory(datasets_loc=None, reddit_dump_loc=None):
+    save_directory = paths_catalog.RAW_DATASETS
+    if datasets_loc and reddit_dump_loc:
+        save_directory = CURRENT_DIRECTORY.parent / datasets_loc / reddit_dump_loc
     try:
         save_directory.mkdir()
     except FileExistsError:
-        pass
-
+        logger.info(f"{save_directory} exists, using it")
     return save_directory
 
 
@@ -41,6 +45,7 @@ class ScrapeReddit:
     flair_filters = []
     __posts = {}
     __posts_df = None
+    __reddit_dataset_name = "latest_reddit_data"
 
     @classmethod
     def config(
@@ -155,8 +160,8 @@ class ScrapeReddit:
             return
 
         cls.__posts_df = pd.DataFrame(cls.__posts)
-        cls.__posts_df.to_csv(cls.save_directory / "reddit_dataset.csv")
-        dump(cls.__posts_df, cls.save_directory / "reddit_dataset.joblib")
+        cls.__posts_df.to_csv(cls.save_directory / f"{cls.__reddit_dataset_name}.csv")
+        dump(cls.__posts_df, cls.save_directory / f"{cls.__reddit_dataset_name}.joblib")
 
     @classmethod
     def __flairs(cls):
