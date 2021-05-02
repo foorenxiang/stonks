@@ -146,12 +146,16 @@ class StonksAutoTS:
         for ticker_name, ticker_dfs in ticker_dfs.items():
             ticker_dfs = cls.__set_date_on_yf_df(ticker_dfs)
             if cls.__dataset_is_long:
-                cls.__train_model(
-                    absolute_dump_directory, ticker_name, ticker_dfs, "Open"
-                )
-                cls.__train_model(
-                    absolute_dump_directory, ticker_name, ticker_dfs, "Close"
-                )
+                prediction_targets = "Open", "Close"
+                [
+                    cls.__train_model(
+                        absolute_dump_directory,
+                        ticker_name,
+                        ticker_dfs,
+                        prediction_target,
+                    )
+                    for prediction_target in prediction_targets
+                ]
             else:
                 cls.__train_model(absolute_dump_directory, ticker_name, ticker_dfs)
 
