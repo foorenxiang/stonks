@@ -1,9 +1,14 @@
 import logging
 import joblib
 from pathlib import Path
-from utils import paths_catalog
 from autogluon_train_test import NUM_ROWS_TO_EXTRACT as HEAD_ROWS_USED_IN_TRAINING
 from autogluon.text import TextPredictor
+
+import sys
+from from_root import from_root
+
+sys.path.append(str(from_root(".")))
+from utils import paths_catalog
 
 CURRENT_DIRECTORY = Path(__file__).resolve().parent
 LOGGING_DIRECTORY = paths_catalog.AUTOGLUON_LOGS
