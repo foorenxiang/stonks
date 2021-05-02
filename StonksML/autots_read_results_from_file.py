@@ -1,6 +1,7 @@
 from joblib import load
 import os
 from pathlib import Path
+from utils import paths_catalog
 import logging
 
 logger = logging.getLogger(__name__)
@@ -8,8 +9,8 @@ logger.setLevel(logging.DEBUG)
 
 
 class AutoTSData:
-    current_directory = Path(__file__).resolve().parent
-    __default_model_dumps_folder = current_directory / "autots_model_dumps"
+    CURRENT_DIRECTORY = Path(__file__).resolve().parent
+    __DEFAULT_MODEL_DUMPS_FOLDER = paths_catalog.AUTOTS_MODEL_DUMPS
 
     FORECASTS_OPEN = "*forecasts_open.joblib"
     MODEL_RESULTS_OPEN = "*model_results_open.joblib"
@@ -37,7 +38,7 @@ class AutoTSData:
         model_dumps = Path(dump_folder)
         if dump_folder == "":
 
-            model_dumps_folder = cls.__default_model_dumps_folder
+            model_dumps_folder = cls.__DEFAULT_MODEL_DUMPS_FOLDER
             model_dumps_subdirectories = model_dumps_folder.glob("*")
 
             all_subdirs = [
