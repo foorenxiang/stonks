@@ -35,8 +35,10 @@ python_version = "3.8"
 allow_prereleases = true
 
 [scripts]
-autots_train = "python3 StonksML/autots_train.py"
-autots_results = "python3 StonksML/autots_cli_read_results.py"
-autots_clean = "python3 StonksML/clean_model_dumps.py"
-autogluon_twitter_train = "python3 StonksML/twitter_train_test.py"
-autogluon_twitter_predict = "python3 StonksML/twitter_sentiment_analysis.py"
+autots_predict = "python3 StonksML/timeseries/autots_train_and_predict.py"
+autots_results = "python3 StonksML/timeseries/autots_read_results_from_file.py"
+autots_clean = "python3 StonksML/timeseries/autots_clean_model_dumps.py"
+autogluon_preprocess = "python3 StonksML/sentiment_analysis/autogluon_training_data_prep.py"
+autogluon_train_test = "python3 StonksML/sentiment_analysis/autogluon_train_test.py"
+autogluon_evaluate = "python3 StonksML/sentiment_analysis/autogluon_tester.py"
+reddit_scrape_analyse = "python3 StonksML/sentiment_analysis/scrape_analyse_reddit.py"
