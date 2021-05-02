@@ -9,9 +9,14 @@ from ticker_symbols import get_ticker_symbols
 import numexpr
 import os
 from autots_config import AutoTSConfigs
-from utils.exec_time import exec_time
-from utils import paths_catalog
 import logging
+
+import sys
+from from_root import from_root
+
+sys.path.append(str(from_root(".")))
+from utils import paths_catalog
+from utils.exec_time import exec_time
 
 CURRENT_DIRECTORY = Path(__file__).resolve().parent
 LOG_PATH = paths_catalog.AUTOTS_LOGS

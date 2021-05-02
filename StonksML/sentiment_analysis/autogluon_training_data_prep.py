@@ -3,6 +3,11 @@ import os
 import joblib
 import numexpr
 import pandas as pd
+
+import sys
+from from_root import from_root
+
+sys.path.append(str(from_root(".")))
 from utils import paths_catalog
 
 logging.basicConfig(level=logging.INFO)

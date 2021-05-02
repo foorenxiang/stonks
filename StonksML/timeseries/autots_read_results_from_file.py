@@ -1,8 +1,13 @@
 from joblib import load
 import os
 from pathlib import Path
-from utils import paths_catalog
 import logging
+
+import sys
+from from_root import from_root
+
+sys.path.append(str(from_root(".")))
+from utils import paths_catalog
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

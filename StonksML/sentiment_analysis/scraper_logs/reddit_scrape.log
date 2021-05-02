@@ -2,7 +2,7 @@
 Configured ScrapeReddit with subreddits: ['wallstreetbets', 'ocugen', 'teslainvestorsclub', 'SPACs']
 Configured ScrapeReddit with flair filters: ['Weekend', 'Analysis', 'Daily', 'Discussion', 'Thread', 'Mods']
 Configured ScrapeReddit with max post limit of 50
-Started scrapping at 2021-05-02 16:33:00.600345
+Started scrapping at 2021-05-02 19:45:05.100341
 Starting to scrape WALLSTREETBETS
 Scraped 50 posts from WALLSTREETBETS
 Starting to scrape OCUGEN
@@ -12,9 +12,9 @@ Scraped 50 posts from TESLAINVESTORSCLUB
 Starting to scrape SPACS
 Scraped 50 posts from SPACS
 Flairs:
+Meme
 YOLO
 Gain
-Meme
 DD
 Loss
 News

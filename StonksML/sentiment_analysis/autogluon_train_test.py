@@ -7,6 +7,11 @@ import pandas as pd
 import joblib
 import logging
 from pathlib import Path
+
+import sys
+from from_root import from_root
+
+sys.path.append(str(from_root(".")))
 from utils import paths_catalog
 
 CURRENT_DIRECTORY = Path(__file__).resolve().parent

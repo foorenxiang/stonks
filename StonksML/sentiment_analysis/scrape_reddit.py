@@ -8,9 +8,14 @@ import praw
 from datetime import datetime
 import pandas as pd
 from joblib import dump
-from utils import paths_catalog
 from typing import Optional, List
 from reddit_scraper_config import SCRAPE_REDDIT_CONFIG
+
+import sys
+from from_root import from_root
+
+sys.path.append(str(from_root(".")))
+from utils import paths_catalog
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
