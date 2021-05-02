@@ -5,7 +5,7 @@ import shutil
 
 def clean_model_dumps():
     model_dumps_dir = Path(__file__).resolve().parent / "model_dumps"
-    model_categories = ["ACCURATE", "FAST"]
+    model_categories = ["ACCURATE", "FAST", "GPU", "DEFAULT"]
 
     folders_to_delete = []
 
