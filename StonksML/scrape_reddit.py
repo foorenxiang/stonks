@@ -10,6 +10,7 @@ import pandas as pd
 from joblib import dump
 from utils import paths_catalog
 from typing import Optional, List
+from reddit_scraper_config import SCRAPE_REDDIT_CONFIG
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -184,23 +185,7 @@ class ScrapeReddit:
 
 
 def scrape():
-    ScrapeReddit.config(
-        [
-            "wallstreetbets",
-            "ocugen",
-            "teslainvestorsclub",
-            "SPACs",
-        ],
-        [
-            "Weekend",
-            "Analysis",
-            "Daily",
-            "Discussion",
-            "Thread",
-            "Mods",
-        ],
-        50,
-    )
+    ScrapeReddit.config(*SCRAPE_REDDIT_CONFIG)
     ScrapeReddit.scrape()
 
 
