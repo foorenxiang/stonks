@@ -14,6 +14,6 @@ AUTOTS_PACKAGE = PROJECT_ROOT / "StonksML"
 AUTOTS_LOGS = AUTOTS_PACKAGE / "autots_logs"
 AUTOTS_MODEL_DUMPS = AUTOTS_PACKAGE / "autots_model_dumps"
 
-ML_UTILS = PROJECT_ROOT / "StonksML" / "utils"
-
 STREAMLIT_PACKAGE = PROJECT_ROOT / "StonksStreamlit"
+
+ML_UTILS = PROJECT_ROOT / "StonksML" / "utils"
