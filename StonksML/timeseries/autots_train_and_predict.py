@@ -7,11 +7,11 @@ from pathlib import Path
 from datetime import datetime, timedelta
 import numexpr
 import os
-from autots_config import AutoTSConfigs
 import logging
 
 import sys
 from from_root import from_root
+from StonksML.timeseries.autots_config import AutoTSConfigs
 
 sys.path.append(str(from_root(".")))
 from utils import paths_catalog

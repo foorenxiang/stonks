@@ -2,7 +2,7 @@ from joblib import load
 import os
 from pathlib import Path
 from datetime import datetime, timedelta
-from autots_train_and_predict import train_stonks
+
 import logging
 
 import sys
@@ -10,6 +10,7 @@ from from_root import from_root
 
 sys.path.append(str(from_root(".")))
 from utils import paths_catalog
+from StonksML.timeseries.autots_train_and_predict import train_stonks
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

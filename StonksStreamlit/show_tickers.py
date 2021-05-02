@@ -1,12 +1,24 @@
 import yfinance as yf
 import streamlit as st
 
+import sys
+from from_root import from_root
+
+sys.path.append(str(from_root(".")))
+from utils import paths_catalog
+from StonksML.timeseries.generate_streamlit_results import generate_streamlit_results
+
 
 class StreamlitShowTickers:
     tickerSymbols = set()
 
     @classmethod
     def show_tickers(cls, tickerSymbols={}):
+        st.write("##### Please wait while we train/load the ML results")
+        stocks_predictions = generate_streamlit_results()
+        st.write("##### ML results processed")
+        if not stocks_predictions:
+            st.write("### Please create stock predictions to continue...")
         if not tickerSymbols:
             st.write("### Please add ticker symbols to tickerSymbols.py to continue...")
         cls.tickerSymbols = tickerSymbols
