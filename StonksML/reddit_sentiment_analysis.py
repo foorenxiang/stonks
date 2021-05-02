@@ -13,6 +13,7 @@ SENTIMENT_ANALYSIS_OUTPUT = "reddit_sentiment_analysis"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler())
 
 try:
     LOGGING_DIRECTORY.mkdir()
