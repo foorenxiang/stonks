@@ -1,4 +1,4 @@
-from StonksStreamlit.ticker_symbols import get_ticker_symbols
+from ticker_symbols import get_ticker_symbols
 
 
 def test_get_symbols_type():

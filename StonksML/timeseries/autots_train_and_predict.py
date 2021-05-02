@@ -5,7 +5,6 @@ import yfinance as yf
 from joblib import dump
 from pathlib import Path
 from datetime import datetime, timedelta
-from ticker_symbols import get_ticker_symbols
 import numexpr
 import os
 from autots_config import AutoTSConfigs
@@ -17,6 +16,7 @@ from from_root import from_root
 sys.path.append(str(from_root(".")))
 from utils import paths_catalog
 from utils.exec_time import exec_time
+from utils.ticker_symbols import get_ticker_symbols
 
 CURRENT_DIRECTORY = Path(__file__).resolve().parent
 LOG_PATH = paths_catalog.AUTOTS_LOGS

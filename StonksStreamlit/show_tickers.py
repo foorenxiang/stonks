@@ -2,7 +2,7 @@ import yfinance as yf
 import streamlit as st
 
 
-class ShowTickers:
+class StreamlitShowTickers:
     tickerSymbols = set()
 
     @classmethod
