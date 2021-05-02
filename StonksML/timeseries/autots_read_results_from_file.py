@@ -9,8 +9,8 @@ from from_root import from_root
 sys.path.append(str(from_root(".")))
 from utils import paths_catalog
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
 
 
 class AutoTSData:
