@@ -51,7 +51,9 @@ def train_test():
     """training"""
     from autogluon.text import TextPredictor
 
-    time_limit_in_secs = 60 * 60 * 15
+    SECS_IN_HOUR = 3600
+    SECS_IN_MIN = 60
+    time_limit_in_secs = 15 * SECS_IN_HOUR
     predictor = TextPredictor(label="label", eval_metric="acc", path=MODEL_SAVE_PATH)
     predictor.fit(train_data, time_limit=time_limit_in_secs)
 
