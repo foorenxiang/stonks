@@ -1,17 +1,18 @@
 import logging
-from pathlib import Path
 import os
 import joblib
 import numexpr
 import pandas as pd
+from utils import paths_catalog
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 class SentimentalAnalysisDataPreprocessor:
-    __current_directory = Path(__file__).resolve().parent
-    __datasets_directory = __current_directory.parent / "datasets" / "raw"
+    __DATASET_DIRECTORY = paths_catalog.RAW_DATASETS
+    __DUMP_DIRECTORY = paths_catalog.PREPROCESSED_DATASETS
+    __PROCESSED_FILENAME = "full_preprocessed_reddit_twitter_dataset"
     __training_datasets_name = {
         "training.1600000.processed.noemoticon": r"training.1600000.processed.noemoticon.csv",
         "Reddit_Data": r"Reddit_Data.csv",
@@ -46,7 +47,7 @@ class SentimentalAnalysisDataPreprocessor:
         dataset_name = cls.__training_datasets_name["Reddit_Data"]
         dataset = {
             "name": dataset_name,
-            "location": cls.__datasets_directory / dataset_name,
+            "location": cls.__DATASET_DIRECTORY / dataset_name,
             "drop_duplicates": True,
             "samples_to_take": cls.__unit_rows_to_take_per_dataset * 1,
         }
@@ -73,7 +74,7 @@ class SentimentalAnalysisDataPreprocessor:
         dataset_name = cls.__training_datasets_name["Twitter_Data"]
         dataset = {
             "name": dataset_name,
-            "location": cls.__datasets_directory / dataset_name,
+            "location": cls.__DATASET_DIRECTORY / dataset_name,
             "drop_duplicates": True,
             "samples_to_take": cls.__unit_rows_to_take_per_dataset * 1,
         }
@@ -104,7 +105,7 @@ class SentimentalAnalysisDataPreprocessor:
         ]
         dataset = {
             "name": dataset_name,
-            "location": cls.__datasets_directory / dataset_name,
+            "location": cls.__DATASET_DIRECTORY / dataset_name,
             "drop_duplicates": True,
             "samples_to_take": cls.__unit_rows_to_take_per_dataset * 1,
         }
@@ -127,13 +128,11 @@ class SentimentalAnalysisDataPreprocessor:
     @classmethod
     def preprocess_all_datasets(cls):
         try:
-            cls.__datasets_directory.mkdir()
+            cls.__DATASET_DIRECTORY.mkdir()
         except FileExistsError:
-            logger.info(
-                f"{cls.__datasets_directory} directory already exists, using it"
-            )
+            logger.info(f"{cls.__DATASET_DIRECTORY} directory already exists, using it")
 
-        logger.info(f"Datasets directory: {cls.__datasets_directory}")
+        logger.info(f"Datasets directory: {cls.__DATASET_DIRECTORY}")
         complete_dataset = pd.DataFrame({"sentence": [], "label": [], "source": []})
         _16_milion_tweets = cls.process_16_million_tweets()
         complete_dataset = pd.merge(
@@ -150,14 +149,10 @@ class SentimentalAnalysisDataPreprocessor:
 
         joblib.dump(
             complete_dataset,
-            cls.__datasets_directory.parent
-            / "preprocessed"
-            / "full_preprocessed_reddit_twitter_dataset.joblib",
+            cls.__DUMP_DIRECTORY / f"{cls.__PROCESSED_FILENAME}.joblib",
         )
         complete_dataset.to_csv(
-            cls.__datasets_directory.parent
-            / "preprocessed"
-            / "full_preprocessed_reddit_twitter_dataset.csv"
+            cls.__DUMP_DIRECTORY / f"{cls.__PROCESSED_FILENAME}.csv"
         )
 
         cls.__df_describe(complete_dataset, "complete dataset")
