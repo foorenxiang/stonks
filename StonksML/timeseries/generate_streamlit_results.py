@@ -2,6 +2,7 @@ from joblib import load
 import os
 from pathlib import Path
 from datetime import datetime, timedelta
+from autots_train_and_predict import train_stonks
 import logging
 
 import sys
@@ -21,6 +22,8 @@ class StreamlitResults:
     FORECASTS_OPEN = "*forecasts_open.joblib"
     FORECASTS_CLOSE = "*forecasts_close.joblib"
     FORECASTS_WIDE_DATASET = "*forecasts_wide_dataset.joblib"
+
+    __stocks_data = []
 
     @staticmethod
     def __get_models_date():
@@ -48,57 +51,73 @@ class StreamlitResults:
         )
 
         time_since_model_training = datetime.now() - model_trained_timestamp
-        return time_since_model_training, model_dumps
+        return model_dumps, time_since_model_training
 
     @classmethod
-    def retrieve_autots_forecasts(cls, data_of_interest, dump_folder=None):
-        data_of_interest_name = data_of_interest[1:].split(".")[0]
-        logger.warning("Check __fetch_models functionality")
-
-        time_since_model_training, model_dumps = cls.__fetch_models(dump_folder)
-
+    def __check_if_need_retrain(cls, dump_folder, time_since_model_training):
         logger.info(f"Existing models were trained {time_since_model_training} ago")
-
         is_trained_within_half_day = time_since_model_training < timedelta(hours=12)
 
-        if not is_trained_within_half_day:
-            logger.warning(f"Models are outdated, retraining on latest data")
-            from autots_train_and_predict import train_stonks
+        if is_trained_within_half_day:
+            logger.info("Using existing models")
+            return dump_folder, time_since_model_training
 
-            train_stonks()
-            logger.info(f"Models finished training on latest data")
-            time_since_model_training, model_dumps = cls.__fetch_models(dump_folder)
+        logger.warning(f"Models are outdated, retraining on latest data")
+
+        train_stonks()
+        logger.info(f"Models finished training on latest data")
+        return cls.__fetch_models(dump_folder)
+
+    @classmethod
+    def __process_autots_forecasts(cls, prediction_target, dump_folder=None):
+        prediction_target_name = (
+            prediction_target[1:].split(".")[0].split("forecasts_")[1]
+        )
+        logger.warning("Check __fetch_models functionality")
+
+        model_dumps = cls.__check_if_need_retrain(*cls.__fetch_models(dump_folder))[0]
+        print(model_dumps)
 
         try:
-            files = model_dumps.glob(data_of_interest)
+            files = model_dumps.glob(prediction_target)
         except Exception:
-            logger.error(f"Failed to glob {data_of_interest} in {dump_folder}")
+            logger.error(f"Failed to glob {prediction_target} in {dump_folder}")
             raise
 
         for file in files:
-            stock_name = str(file.stem).split("_")[0]
-            file_data = load(file)
-            # if (
-            #     data_of_interest == cls.FORECASTS_OPEN
-            #     or data_of_interest == cls.FORECASTS_CLOSE
-            # ):
-            #     cls.__df_to_csv(
-            #         file_data, model_dumps, stock_name, data_of_interest_name
-            #     )
-            # elif data_of_interest == cls.FORECASTS_WIDE_DATASET:
-            #     cls.__df_to_csv(
-            #         file_data, model_dumps, stock_name, data_of_interest_name
-            #     )
+            stock = str(file.stem).split("_")[0]
+            prediction_dataframe = load(file)
 
-            print("\n")
-            print(stock_name)
-            print(file_data)
+            artifact = {"name": stock}
+            artifact[prediction_target_name] = prediction_dataframe
+
+            updated = False
+            for idx, stock_data in enumerate(cls.__stocks_data):
+                if stock_data["name"] == stock:
+                    cls.__stocks_data[idx] = {**stock_data, **artifact}
+                    updated = True
+                    break
+
+            if not updated:
+                cls.__stocks_data.append(artifact)
+
+    @classmethod
+    def retrieve_autots_forecasts(cls):
+        [
+            cls.__process_autots_forecasts(prediction_target)
+            for prediction_target in [
+                StreamlitResults.FORECASTS_WIDE_DATASET,
+                StreamlitResults.FORECASTS_OPEN,
+                StreamlitResults.FORECASTS_CLOSE,
+            ]
+        ]
+
+        return cls.__stocks_data
 
 
 def generate_streamlit_results():
-    StreamlitResults.retrieve_autots_forecasts(StreamlitResults.FORECASTS_OPEN)
-    StreamlitResults.retrieve_autots_forecasts(StreamlitResults.FORECASTS_CLOSE)
-    StreamlitResults.retrieve_autots_forecasts(StreamlitResults.FORECASTS_WIDE_DATASET)
+    stocks_data = StreamlitResults.retrieve_autots_forecasts()
+    return stocks_data
 
 
 if __name__ == "__main__":
