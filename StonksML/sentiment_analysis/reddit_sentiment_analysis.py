@@ -1,9 +1,14 @@
 import logging
 import pandas as pd
-from utils import paths_catalog
 from pathlib import Path
 from joblib import load, dump
 from autogluon.text import TextPredictor
+
+import sys
+from from_root import from_root
+
+sys.path.append(str(from_root(".")))
+from utils import paths_catalog
 
 CURRENT_DIRECTORY = Path(__file__).resolve().parent
 SAVE_DIRECTORY = paths_catalog.PREPROCESSED_DATASETS
