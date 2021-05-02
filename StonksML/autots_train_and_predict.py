@@ -105,10 +105,10 @@ class StonksAutoTS:
     @classmethod
     def __create_model_dump_directories(cls):
         dump_directory = f"{str(datetime.now()).split('.')[0]} {cls.selectedMode}"
-        dump_directory_parent = Path(__file__).resolve().parent
-        (dump_directory_parent / "model_dumps").mkdir(exist_ok=True)
-        (dump_directory_parent / "model_dumps" / dump_directory).mkdir(exist_ok=True)
-        absolute_dump_directory = dump_directory_parent / "model_dumps" / dump_directory
+        dump_directory_parent = Path(__file__).resolve().parent / "autots_model_dumps"
+        (dump_directory_parent).mkdir(exist_ok=True)
+        (dump_directory_parent / dump_directory).mkdir(exist_ok=True)
+        absolute_dump_directory = dump_directory_parent / dump_directory
         return absolute_dump_directory
 
     @classmethod
@@ -129,7 +129,7 @@ class StonksAutoTS:
         ticker_dfs = cls.__get_stocks_data()
 
         cls.selectedMode = AutoTSConfigs.DEFAULT
-        print(f"Training with {cls.selectedMode} mode")
+        print(f"Training AutoTS models with {cls.selectedMode} config")
 
         detected_num_cores = numexpr.detect_number_of_cores()
         logger.info(f"Number of cores detected on this machine: {detected_num_cores}")
