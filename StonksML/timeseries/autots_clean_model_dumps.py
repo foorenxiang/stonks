@@ -1,10 +1,19 @@
-from StonksML.reddit_sentiment_analysis import CURRENT_DIRECTORY
 import os
+import logging
 from pathlib import Path
 import shutil
 
+import sys
+from from_root import from_root
+
+sys.path.append(str(from_root(".")))
+from utils import paths_catalog
+
 CURRENT_DIRECTORY = Path(__file__).resolve().parent
-MODEL_DUMPS_DIRECTORY = CURRENT_DIRECTORY / "autots_model_dumps"
+MODEL_DUMPS_DIRECTORY = paths_catalog.AUTOTS_MODEL_DUMPS
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def clean_model_dumps():
@@ -24,7 +33,9 @@ def clean_model_dumps():
             folders_to_delete_for_category,
         )
 
-    [shutil.rmtree(folder, ignore_errors=True) for folder in folders_to_delete]
+    for folder in folders_to_delete:
+        logger.info(f"Purging {folder}")
+        shutil.rmtree(folder, ignore_errors=True)
 
 
 if __name__ == "__main__":
