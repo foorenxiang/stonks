@@ -10,24 +10,26 @@ import numexpr
 import os
 from autots_config import AutoTSConfigs
 from utils.exec_time import exec_time
+from utils import paths_catalog
 import logging
 
-file_dir = Path(__file__).resolve().parent
-log_path = file_dir / "autots_logs"
-try:
-    log_path.mkdir()
-except FileExistsError:
-    pass
+CURRENT_DIRECTORY = Path(__file__).resolve().parent
+LOG_PATH = paths_catalog.AUTOTS_LOGS
 
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.FileHandler(filename=log_path / "autots_training.log", mode="w"),
-        logging.StreamHandler(),
-    ],
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
 )
 logger = logging.getLogger(__file__)
+logger.addHandler(logging.StreamHandler())
+
+try:
+    LOG_PATH.mkdir()
+except FileExistsError:
+    logger.info(f"{LOG_PATH} exists, using it")
+
+logger.addHandler(
+    logging.FileHandler(filename=LOG_PATH / "autots_training.log", mode="w")
+)
 
 
 class StonksAutoTS:
@@ -105,10 +107,10 @@ class StonksAutoTS:
     @classmethod
     def __create_model_dump_directories(cls):
         dump_directory = f"{str(datetime.now()).split('.')[0]} {cls.selectedMode}"
-        dump_directory_parent = Path(__file__).resolve().parent
-        (dump_directory_parent / "model_dumps").mkdir(exist_ok=True)
-        (dump_directory_parent / "model_dumps" / dump_directory).mkdir(exist_ok=True)
-        absolute_dump_directory = dump_directory_parent / "model_dumps" / dump_directory
+        dump_directory_parent = paths_catalog.AUTOTS_MODEL_DUMPS
+        (dump_directory_parent).mkdir(exist_ok=True)
+        (dump_directory_parent / dump_directory).mkdir(exist_ok=True)
+        absolute_dump_directory = dump_directory_parent / dump_directory
         return absolute_dump_directory
 
     @classmethod
@@ -129,7 +131,7 @@ class StonksAutoTS:
         ticker_dfs = cls.__get_stocks_data()
 
         cls.selectedMode = AutoTSConfigs.DEFAULT
-        print(f"Training with {cls.selectedMode} mode")
+        print(f"Training AutoTS models with {cls.selectedMode} config")
 
         detected_num_cores = numexpr.detect_number_of_cores()
         logger.info(f"Number of cores detected on this machine: {detected_num_cores}")

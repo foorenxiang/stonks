@@ -20,6 +20,7 @@ cd = "*"
 orjson = "*"
 tensorflow = "*"
 cuda = "*"
+from-root = "*"
 
 [dev-packages]
 black = "*"

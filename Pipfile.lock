@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "5b102efe318491cfcd8e46a7f858be18eb9c52300f83030c7098f51ab4df115a"
+            "sha256": "77c2937666f8599541c4064c789006448fae8cce9627ecdcf30c70a96df7fe19"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -423,6 +423,13 @@
             "markers": "python_version >= '3.6'",
             "version": "==3.4.7"
         },
+        "cuda": {
+            "hashes": [
+                "sha256:41a4c6942dc879faabe3cbef6e2ca56e652f8c9f454116a65a51b0be4ef77321"
+            ],
+            "index": "pypi",
+            "version": "==0.0.1"
+        },
         "cycler": {
             "hashes": [
                 "sha256:1d8a5ae1ff6c5cf9b93e8811e581232ad8920aeec647c37316ceac982b08cb2d",
@@ -599,6 +606,14 @@
                 "sha256:9e9ef47fa92625c4721036e7c4124182668dc6021d9e7c73704edd395648deb9"
             ],
             "version": "==1.12"
+        },
+        "from-root": {
+            "hashes": [
+                "sha256:7b46ea1c0cd191c6237a649ec5695087661170a808e2f2f90712ee5846e315ea",
+                "sha256:e2038fb6c741ceffcb370f0d41ce7605e415c88b062574a4370b009bd4b183e7"
+            ],
+            "index": "pypi",
+            "version": "==1.0.1"
         },
         "fsspec": {
             "hashes": [
