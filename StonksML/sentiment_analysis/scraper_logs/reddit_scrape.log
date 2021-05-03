@@ -1,43 +1,108 @@
 /home/renxiang/code/streamlit_stonks/datasets/raw exists, using it
-Configured ScrapeReddit with subreddits: ['wallstreetbets', 'ocugen', 'teslainvestorsclub', 'SPACs']
+Configured ScrapeReddit with subreddits: ['wallstreetbets', 'stocks', 'ocugen', 'teslainvestorsclub', 'SPACs', 'Bogleheads', 'Investing', 'CryptoCurrency', 'Bitcoin', 'ethereum', 'dogecoin']
 Configured ScrapeReddit with flair filters: ['Weekend', 'Analysis', 'Daily', 'Discussion', 'Thread', 'Mods']
-Configured ScrapeReddit with max post limit of 50
-Started scrapping at 2021-05-02 19:45:05.100341
+Configured ScrapeReddit with max post limit of 100
+Started scrapping at 2021-05-03 22:04:54.051663
 Starting to scrape WALLSTREETBETS
-Scraped 50 posts from WALLSTREETBETS
+Scraped 100 posts from WALLSTREETBETS
+Starting to scrape STOCKS
+Scraped 100 posts from STOCKS
 Starting to scrape OCUGEN
-Scraped 50 posts from OCUGEN
+Scraped 100 posts from OCUGEN
 Starting to scrape TESLAINVESTORSCLUB
-Scraped 50 posts from TESLAINVESTORSCLUB
+Scraped 100 posts from TESLAINVESTORSCLUB
 Starting to scrape SPACS
-Scraped 50 posts from SPACS
+Scraped 100 posts from SPACS
+Starting to scrape BOGLEHEADS
+Scraped 100 posts from BOGLEHEADS
+Starting to scrape INVESTING
+Scraped 100 posts from INVESTING
+Starting to scrape CRYPTOCURRENCY
+Scraped 100 posts from CRYPTOCURRENCY
+Starting to scrape BITCOIN
+Scraped 100 posts from BITCOIN
+Starting to scrape ETHEREUM
+Scraped 100 posts from ETHEREUM
+Starting to scrape DOGECOIN
+Scraped 100 posts from DOGECOIN
 Flairs:
 Meme
 YOLO
-Gain
+News
 DD
 Loss
-News
-News📩
-#Ocugreen👅⬆️
-Useful🤓
-Meme.exe🧢
-DD🚀
+Gain
 None
-Self-Driving
+Company News
+Industry News
+Industry Question
+Resources
+Advice Request
+Advice
+Trades
+Meta
+Company Question
+#Ocugreen👅⬆️
+News📩
+Meme.exe🧢
+Useful🤓
+DD🚀
 Energy
+Investors
+Bull Thesis
+Germany
+Self-Driving
 Factories
 Competition
-Investors
 China
 Earnings
 Misc
 TextPost
 Batteries
-Rumor
+Solar
+Charging
 Reference
+Definitive Agreement
+Strategy
+Rumor
+Warrants
 Merger Vote!
 REDEMPTION
-Definitive Agreement
 New Spac
 Filings
+OFFICIAL
+FINANCE
+TRADING
+WARNING
+COMEDY
+LEGACY
+GENERAL-NEWS
+SECURITY
+🟢 FINANCE
+MEDIA
+ADOPTION
+🟢 POLITICS
+🌕 MOONS
+POLITICS
+SELF-STORY
+STRATEGY
+NEW-COIN
+PERSPECTIVE
+META
+EXCHANGE
+SCALABILITY
+🟢 GENERAL-NEWS
+TECHNICAL
+METRICS
+🔴 UNRELIABLE SOURCE
+MINING-STAKING
+NEW COIN
+🟢 MEDIA
+fake
+Adoption
+Serious
+Idea
+Promotion
+Question
+Giveaway
+Opinion piece

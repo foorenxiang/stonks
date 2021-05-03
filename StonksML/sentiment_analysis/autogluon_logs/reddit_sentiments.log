@@ -1,24 +1,25 @@
 /home/renxiang/code/streamlit_stonks/datasets/preprocessed exists, using it
-         Subreddit                                              Title         Sentiment  ...  Upvote_Ratio  Flair              Author
-0   wallstreetbets       It’s simple. As for me, I like the stock 💎🤲🦍          Positive  ...          0.93   Meme         whiteowl817
-1   wallstreetbets                     GME Yolo. What could go wrong?  Neutral/Negative  ...          0.85   YOLO    Fearless-Gas4893
-2   wallstreetbets  took out a 15k loan and went all in on GME in ...          Positive  ...          0.94   YOLO             LaFrugi
-3   wallstreetbets  Following DFV to the Moon. I have done my own ...          Positive  ...          0.94   Gain        Dynasty_Rich
-4   wallstreetbets  I'd like an order of GME tendies with a side o...  Neutral/Negative  ...          0.91   Gain      PerestroikaPal
-5   wallstreetbets                            GME Q2 earnings preview  Neutral/Negative  ...          0.71   Meme             haupt91
-6   wallstreetbets  Im a huge pussy for LEAPs, but at least its no...          Positive  ...          0.83   YOLO  partially__derived
-7   wallstreetbets  Happy (upcoming) 10 Mil degenerate, WSB! Here’...          Positive  ...          0.92   Meme           roman_axt
-8   wallstreetbets  CLOV Due Diligence Summary - Using Machine Lea...  Neutral/Negative  ...          0.75     DD            iam6ft10
-9   wallstreetbets  Just what is going on with Vaxart? Up to date ...          Positive  ...          0.83     DD             zozland
-10  wallstreetbets  For the retard who said prove it for my 180k+ ...  Neutral/Negative  ...          0.93   Loss               talm0
-11  wallstreetbets  On a scale of 1 - 10, how much is my wife havi...          Positive  ...          0.64   Loss   TrickAntelope2807
-12  wallstreetbets                     PSFE Long YOLO + earnings play  Neutral/Negative  ...          0.70   YOLO       Sterile-Panda
-13  wallstreetbets  Bloomberg article indirectly talking up BlackB...          Positive  ...          0.83     DD   WallStreetRetardd
-14  wallstreetbets  Correlation between Short Sale Interest and Au...  Neutral/Negative  ...          0.68     DD          dhipprokko
-15  wallstreetbets                                        Light em up          Positive  ...          0.90   Meme            keenfeed
-16  wallstreetbets  Cohu; the plug for your favorite semiconductor...          Positive  ...          0.77     DD      Radish-Perfect
-17  wallstreetbets         SPCE still has legs, but faces challengers  Neutral/Negative  ...          0.70     DD       Donlorenzo_23
-18  wallstreetbets  YOLO earnings week in midst of Sell in May FUD...  Neutral/Negative  ...          0.75   YOLO        mrbrownmagic
-19  wallstreetbets  Understanding Serverless: Fastly, Software-Def...          Positive  ...          0.78     DD     notbrokemexican
+         Subreddit                                              Title         Sentiment  ...  Upvote_Ratio  Flair                Author
+0   wallstreetbets               The Lost SEC filing from Citadel LLC  Neutral/Negative  ...          0.97   Meme            steglitsen
+1   wallstreetbets                           WSB analyzes some charts  Neutral/Negative  ...          0.85   Meme          yolocallking
+2   wallstreetbets  Finally consolidated my RH shares over to Fide...  Neutral/Negative  ...          0.95   YOLO         VicTheRealest
+3   wallstreetbets                   Early redemption of senior notes          Positive  ...          0.96   News   ExpressionNaive1923
+4   wallstreetbets                                  God tier DD: VIAC  Neutral/Negative  ...          0.83     DD   bottledwaterisascam
+5   wallstreetbets               🔥$NOK has potential to reach $10+🚀🚀🚀  Neutral/Negative  ...          0.80     DD      TheDevelopedDeed
+6   wallstreetbets                 Clover Health - A mini DD on $CLOV          Positive  ...          0.79     DD                neox29
+7   wallstreetbets  Historical Post Earnings Moves MEGA Compilatio...          Positive  ...          0.87     DD           FluxRevived
+8   wallstreetbets                        WSB discussion this weekend  Neutral/Negative  ...          0.94   News                pdwp90
+9   wallstreetbets  Tilray/Aphria merge complete Tilray to the moo...          Positive  ...          0.82   YOLO             ryifryhfd
+10  wallstreetbets                     GME Yolo. What could go wrong?  Neutral/Negative  ...          0.86   YOLO      Fearless-Gas4893
+11  wallstreetbets                  $NOK $NOK I’m back from the dead!          Positive  ...          0.90   YOLO     2chainz4bracelets
+12  wallstreetbets  This all the money I have NOK! The time has co...  Neutral/Negative  ...          0.87   YOLO       SmoothSentiment
+13  wallstreetbets  Clean Meat is at the brink of revolutionising ...          Positive  ...          0.83     DD               Kuentai
+14  wallstreetbets  Apollo buys Yahoo (and YahooFinance) from Veri...  Neutral/Negative  ...          0.92   News   Seaworthiness_Local
+15  wallstreetbets  GME, AAPL, TSLA, MVIS - All rolled into one co...  Neutral/Negative  ...          0.66     DD            CGPictures
+16  wallstreetbets                       Diversified Portfolio? CHECK          Positive  ...          0.68   YOLO                deca-d
+17  wallstreetbets                                            BNGO DD  Neutral/Negative  ...          0.85     DD    Auspicious_dissenT
+18  wallstreetbets           How to profit from 💸 runaway inflation 💸  Neutral/Negative  ...          0.82     DD  Natural_Profession_8
+19  wallstreetbets                                Margin Call - REMIX          Positive  ...          1.00   Meme             Malfanese
 
 [20 rows x 9 columns]
+Subreddits overall scores:
