@@ -14,13 +14,16 @@ class StreamlitShowTickers:
 
     @classmethod
     def show_tickers(cls, tickerSymbols={}):
-        st.write("##### Please wait while we train/load the ML results")
-        stocks_predictions = generate_streamlit_results()
-        st.write("##### ML results processed")
-        if not stocks_predictions:
-            st.write("### Please create stock predictions to continue...")
         if not tickerSymbols:
             st.write("### Please add ticker symbols to tickerSymbols.py to continue...")
+            return
+
+        stocks_predictions = generate_streamlit_results()
+        if not stocks_predictions:
+            st.write(
+                "##### Please wait while we train/load the ML results, check back again later"
+            )
+
         cls.tickerSymbols = tickerSymbols
         for tickerSymbol in cls.tickerSymbols:
             tickerData = yf.Ticker(tickerSymbol)
@@ -37,3 +40,11 @@ class StreamlitShowTickers:
 
             else:
                 st.write(f"{tickerSymbol} is not a valid symbol on Yahoo Finance!!")
+
+            for prediction in stocks_predictions:
+                if prediction["name"] == tickerSymbol:
+                    st.write(f"## Forecast for {tickerSymbol}")
+                    for key in prediction.keys():
+                        if key != "name":
+                            st.line_chart(prediction[key])
+                    break

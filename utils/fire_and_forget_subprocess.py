@@ -2,11 +2,21 @@
 
 import asyncio
 import time
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def fire_and_forget(func):
     def wrapper_function(*args, **kwargs):
-        return asyncio.get_event_loop().run_in_executor(None, func, *args, *kwargs)
+        try:
+            return asyncio.get_event_loop().run_in_executor(None, func, *args, *kwargs)
+        except RuntimeError:
+            logger.exception(
+                "Failed to get event loop, probably running on a different process"
+            )
+        return func(*args, **kwargs)
 
     return wrapper_function
 

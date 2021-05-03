@@ -10,7 +10,10 @@ from from_root import from_root
 
 sys.path.append(str(from_root(".")))
 from utils import paths_catalog
+from utils.fire_and_forget_subprocess import fire_and_forget
 from StonksML.timeseries.autots_train_and_predict import train_stonks
+
+train_stonks = fire_and_forget(train_stonks)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -25,10 +28,6 @@ class StreamlitResults:
     FORECASTS_WIDE_DATASET = "*forecasts_wide_dataset.joblib"
 
     __stocks_data = []
-
-    @staticmethod
-    def __get_models_date():
-        pass
 
     @classmethod
     def __fetch_models(cls, dump_folder):
@@ -63,11 +62,10 @@ class StreamlitResults:
             logger.info("Using existing models")
             return dump_folder, time_since_model_training
 
-        logger.warning(f"Models are outdated, retraining on latest data")
-
+        logger.warning("Models are outdated")
         train_stonks()
-        logger.info(f"Models finished training on latest data")
-        return cls.__fetch_models(dump_folder)
+        logger.warning("Retraining on latest data")
+        return None
 
     @classmethod
     def __process_autots_forecasts(cls, prediction_target, dump_folder=None):
@@ -76,7 +74,12 @@ class StreamlitResults:
         )
         logger.warning("Check __fetch_models functionality")
 
-        model_dumps = cls.__check_if_need_retrain(*cls.__fetch_models(dump_folder))[0]
+        check_result = cls.__check_if_need_retrain(*cls.__fetch_models(dump_folder))
+
+        if type(check_result) != tuple:
+            return None
+
+        model_dumps = check_result[0]
         print(model_dumps)
 
         try:
