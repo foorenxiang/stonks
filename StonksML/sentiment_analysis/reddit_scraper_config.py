@@ -1,9 +1,16 @@
 SCRAPE_REDDIT_CONFIG = [
     [
         "wallstreetbets",
+        "stocks",
         "ocugen",
         "teslainvestorsclub",
         "SPACs",
+        "Bogleheads",
+        "Investing",
+        "CryptoCurrency",
+        "Bitcoin",
+        "ethereum",
+        "dogecoin",
     ],
     [
         "Weekend",
@@ -13,5 +20,5 @@ SCRAPE_REDDIT_CONFIG = [
         "Thread",
         "Mods",
     ],
-    50,
+    100,
 ]

@@ -15,6 +15,7 @@ SAVE_DIRECTORY = paths_catalog.PREPROCESSED_DATASETS
 LOGGING_DIRECTORY = paths_catalog.AUTOGLUON_LOGS
 MODEL_SAVE_PATH = paths_catalog.AUTOGLUON_MODEL
 SENTIMENT_ANALYSIS_OUTPUT = "reddit_sentiment_analysis"
+SENTIMENT_ANALYSIS_SUMMARY = "reddit_sentiment_analysis_summary"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -63,6 +64,21 @@ def reddit_sentiment_analysis():
     logger.info(reddit_dump_df.head(20))
     reddit_dump_df.to_csv(SAVE_DIRECTORY / f"{SENTIMENT_ANALYSIS_OUTPUT}.csv")
     dump(reddit_dump_df, SAVE_DIRECTORY / f"{SENTIMENT_ANALYSIS_OUTPUT}.joblib")
+    reddit_dump_df.info()
+
+    subreddit_overall_sentiment_scores = (
+        reddit_dump_df[["Subreddit", "Sentiment_score"]].groupby(["Subreddit"]).mean()
+    )
+    logger.info("Subreddits overall scores:")
+    print(subreddit_overall_sentiment_scores)
+
+    subreddit_overall_sentiment_scores.to_csv(
+        SAVE_DIRECTORY / f"{SENTIMENT_ANALYSIS_SUMMARY}.csv"
+    )
+    dump(
+        subreddit_overall_sentiment_scores,
+        SAVE_DIRECTORY / f"{SENTIMENT_ANALYSIS_SUMMARY}.joblib",
+    )
 
 
 if __name__ == "__main__":
