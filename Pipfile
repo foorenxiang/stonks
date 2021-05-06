@@ -6,21 +6,34 @@ name = "pypi"
 [packages]
 streamlit = "*"
 yfinance = "*"
-autots = "*"
 sklearn = "*"
 varname = "*"
 matplotlib = "*"
-mxnet_cu101 = "1.6.0"
-autogluon = "*"
+mxnet-cu101 = {version = "==1.6.0", sys_platform = "== 'linux'"}
+mxnet = {version = "<2.0.0", sys_platform = "== 'darwin'"}
+autogluon = {version = "*", sys_platform = "!= 'win32'"}
 praw = "*"
 python-dotenv = "*"
 gluonts = "*"
 numexpr = "*"
-cd = "*"
 orjson = "*"
-tensorflow = "*"
-cuda = "*"
+tensorflow = {version = "*", sys_platform = "== 'linux'"}
+cuda = {version = "*", sys_platform = "== 'linux'"}
 from-root = "*"
+aniso8601 = "==8.0.0"
+click = "==7.1.2"
+itsdangerous = "==1.1.0"
+pytz = "==2020.1"
+six = "==1.15.0"
+AutoTS = "*"
+CD = "*"
+Flask = "==1.1.2"
+Flask-RESTful = "==0.3.8"
+Flask-SQLAlchemy = "==2.4.3"
+Jinja2 = "==2.11.2"
+MarkupSafe = "==1.1.1"
+SQLAlchemy = "==1.3.18"
+Werkzeug = "==1.0.1"
 
 [dev-packages]
 black = "*"
