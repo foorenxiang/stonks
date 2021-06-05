@@ -1,20 +1,16 @@
-Datasets:
-  - raw:
-      - Sentiment Analysis based on tweets:
-          - url: https://www.kaggle.com/kazanova/sentiment140
-          - location:
-              - ./datasets/training.1600000.processed.noemoticon.csv
-          - description: reddit
-      - Multi-class Sentiment Analysis:
-          - url: https://www.kaggle.com/cosmos98/twitter-and-reddit-sentimental-analysis-dataset?select=Twitter_Data.csv
-          - location:
-              - ./datasets/Reddit_Data.csv
-              - ./datasets/Twitter_Data.csv
-  - preprocessed:
-      - location:
-          - full_preprocessed_reddit_twitter_dataset.joblib
-  - generated:
-      - Stocks Data:
-          - location:
-              - ./datasets/generated/stocks_data
-          - description: stock data dump from yahoo finance
+datasets:
+  raw:
+    Sentiment Analysis based on tweets:
+      url: https://www.kaggle.com/kazanova/sentiment140
+      location: ./datasets/training.1600000.processed.noemoticon.csv
+      description: reddit
+    Multi-class Sentiment Analysis:
+      url: https://www.kaggle.com/cosmos98/twitter-and-reddit-sentimental-analysis-dataset?select=Twitter_Data.csv
+      reddit file location: ./datasets/Reddit_Data.csv
+      twitter file location: ./datasets/Twitter_Data.csv
+  preprocessed:
+    location: full_preprocessed_reddit_twitter_dataset.joblib
+  generated:
+    Stocks Data:
+      location: ./datasets/generated/stocks_data
+      description: parent folder stock data dumps from yahoo finance
