@@ -10,15 +10,17 @@ import numexpr
 import os
 import logging
 from mlflow import log_param, log_params, log_artifact
+from autots_config import AutoTSConfigs
 
 import sys
 from from_root import from_root
-from autots_config import AutoTSConfigs
 
 sys.path.append(str(from_root(".")))
 from utils import paths_catalog
 from utils.exec_time import exec_time
 from utils.ticker_symbols import get_ticker_symbols
+from utils.get_dataset_catalog import get_dataset_catalog
+
 
 CURRENT_DIRECTORY = Path(__file__).resolve().parent
 LOG_PATH = paths_catalog.AUTOTS_LOGS
@@ -40,20 +42,25 @@ logger.addHandler(
 
 
 class StonksAutoTS:
-    selectedMode = AutoTSConfigs.GPU
+    selectedMode = AutoTSConfigs.FAST
     __forecasts_generated_by_training = []
     __dataset_is_long = False  # True if only estimating based on pure time series, false if estimating based on other features in timeseries (wide dataset)
+    __stocks_data_dump_location = from_root(
+        get_dataset_catalog()["datasets"]["generated"]["Stocks Data"]["location"]
+    )
 
     @classmethod
     def __get_stocks_data(cls):
         stocks = get_ticker_symbols()
         period = "3mo"
-        end = cls.__get_last_weekday(datetime.today())
+        end_date = cls.__get_last_weekday(datetime.today())
         stocks_dfs_dict = {
-            stock: yf.Ticker(stock).history(period=period, end=end) for stock in stocks
+            stock: yf.Ticker(stock).history(period=period, end=end_date)
+            for stock in stocks
         }
-        log_params({"stocks": stocks, "stocks_period": period, "end_date": end})
-        return stocks_dfs_dict
+        log_params({"stocks": stocks, "stocks_period": period, "end_date": end_date})
+
+        return stocks_dfs_dict, end_date
 
     @staticmethod
     def __get_last_weekday(date):
@@ -134,7 +141,14 @@ class StonksAutoTS:
     @classmethod
     @exec_time
     def train_and_forecast_stonks(cls):
-        ticker_dfs = cls.__get_stocks_data()
+        ticker_dfs, end_date = cls.__get_stocks_data()
+
+        dump_location = (
+            cls.__stocks_data_dump_location / f"{end_date}_stocks_data.joblib"
+        )
+
+        dump(ticker_dfs, dump_location)
+        log_artifact(dump_location)
 
         print(f"Training AutoTS models with {cls.selectedMode} config")
 
