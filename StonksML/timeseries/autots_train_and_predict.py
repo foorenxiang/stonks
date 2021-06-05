@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 import numexpr
 import os
 import logging
-from mlflow import log_params, log_artifact
+from mlflow import log_param, log_params, log_artifact
 
 import sys
 from from_root import from_root
@@ -164,6 +164,7 @@ def train_stonks():
     StonksAutoTS.train_and_forecast_stonks()
     logger.info("\n\n\n Forecasts generated from latest data:")
     StonksAutoTS.log_results_from_training()
+    log_param("AutoTS mode", StonksAutoTS.selectedMode)
 
 
 if __name__ == "__main__":
