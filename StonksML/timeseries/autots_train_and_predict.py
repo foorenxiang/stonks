@@ -1,6 +1,7 @@
 # modified from https://towardsdatascience.com/train-multiple-time-series-forecasting-models-in-one-line-of-python-code-615f2253b67a
 # modified from https://towardsdatascience.com/how-to-get-stock-data-using-python-c0de1df17e75
 
+from mlflow.tracking.fluent import log_artifacts, log_params
 import yfinance as yf
 from joblib import dump
 from pathlib import Path
@@ -8,6 +9,7 @@ from datetime import datetime, timedelta
 import numexpr
 import os
 import logging
+from mlflow import log_params, log_artifact
 
 import sys
 from from_root import from_root
@@ -46,12 +48,11 @@ class StonksAutoTS:
     def __get_stocks_data(cls):
         stocks = get_ticker_symbols()
         period = "3mo"
+        end = cls.__get_last_weekday(datetime.today())
         stocks_dfs_dict = {
-            stock: yf.Ticker(stock).history(
-                period=period, end=cls.__get_last_weekday(datetime.today())
-            )
-            for stock in stocks
+            stock: yf.Ticker(stock).history(period=period, end=end) for stock in stocks
         }
+        log_params({"stocks": stocks, "stocks_period": period, "end_date": end})
         return stocks_dfs_dict
 
     @staticmethod
@@ -97,13 +98,13 @@ class StonksAutoTS:
             "validation_results": validation_results,
         }
 
-        [
+        for artifact_name, artifact in artifacts.items():
+            dumpfile_path = f"""{save_location}/{f"{ticker_name}_{artifact_name}_{predictionTarget.lower() if predictionTarget else 'wide_dataset'}"}.joblib"""
             dump(
                 artifact,
-                f"""{save_location}/{f"{ticker_name}_{artifact_name}_{predictionTarget.lower() if predictionTarget else 'wide_dataset'}"}.joblib""",
+                dumpfile_path,
             )
-            for artifact_name, artifact in artifacts.items()
-        ]
+            log_artifact(dumpfile_path)
 
         cls.__forecasts_generated_by_training.append(
             {"ticker_name": ticker_name, "forecast": forecast}
