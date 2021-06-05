@@ -13,7 +13,7 @@ from mlflow import log_params, log_artifact
 
 import sys
 from from_root import from_root
-from StonksML.timeseries.autots_config import AutoTSConfigs
+from autots_config import AutoTSConfigs
 
 sys.path.append(str(from_root(".")))
 from utils import paths_catalog
