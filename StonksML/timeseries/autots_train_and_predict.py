@@ -40,7 +40,7 @@ logger.addHandler(
 
 
 class StonksAutoTS:
-    selectedMode = None
+    selectedMode = FAST
     __forecasts_generated_by_training = []
     __dataset_is_long = False  # True if only estimating based on pure time series, false if estimating based on other features in timeseries (wide dataset)
 
@@ -136,7 +136,6 @@ class StonksAutoTS:
     def train_and_forecast_stonks(cls):
         ticker_dfs = cls.__get_stocks_data()
 
-        cls.selectedMode = AutoTSConfigs.DEFAULT
         print(f"Training AutoTS models with {cls.selectedMode} config")
 
         detected_num_cores = numexpr.detect_number_of_cores()
