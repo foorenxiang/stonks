@@ -7,6 +7,7 @@ import pandas as pd
 import joblib
 import logging
 from pathlib import Path
+from mlflow import log_metric, log_param, log_artifacts
 
 import sys
 from from_root import from_root
@@ -52,6 +53,8 @@ def train_test():
     train_data = dataset_df.iloc[:num_training_rows]
     test_data = dataset_df.iloc[-NUM_TEST_ROWS:]
     logger.info(f"{num_training_rows} rows used for training")
+    # mlflow tracking
+    log_param("sentimental analysis sample size", num_training_rows)
 
     """training"""
     from autogluon.text import TextPredictor
@@ -64,7 +67,10 @@ def train_test():
 
     """Evaluation"""
     test_score = predictor.evaluate(test_data, metrics=["acc", "f1"])
+    log_metric("sentiment analysis f1", test_score)
     print(test_score)
+    # mlflow tracking
+    log_artifacts(MODEL_SAVE_PATH)
 
 
 if __name__ == "__main__":
