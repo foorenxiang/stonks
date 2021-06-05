@@ -40,7 +40,7 @@ logger.addHandler(
 
 
 class StonksAutoTS:
-    selectedMode = FAST
+    selectedMode = AutoTSConfigs.GPU
     __forecasts_generated_by_training = []
     __dataset_is_long = False  # True if only estimating based on pure time series, false if estimating based on other features in timeseries (wide dataset)
 
