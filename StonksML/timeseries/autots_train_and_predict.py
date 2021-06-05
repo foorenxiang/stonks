@@ -1,6 +1,7 @@
 # modified from https://towardsdatascience.com/train-multiple-time-series-forecasting-models-in-one-line-of-python-code-615f2253b67a
 # modified from https://towardsdatascience.com/how-to-get-stock-data-using-python-c0de1df17e75
 
+from mlflow.tracking.fluent import log_artifacts, log_params
 import yfinance as yf
 from joblib import dump
 from pathlib import Path
@@ -8,15 +9,18 @@ from datetime import datetime, timedelta
 import numexpr
 import os
 import logging
+from mlflow import log_param, log_params, log_artifact
+from autots_config import AutoTSConfigs
 
 import sys
 from from_root import from_root
-from StonksML.timeseries.autots_config import AutoTSConfigs
 
 sys.path.append(str(from_root(".")))
 from utils import paths_catalog
 from utils.exec_time import exec_time
 from utils.ticker_symbols import get_ticker_symbols
+from utils.get_dataset_catalog import get_dataset_catalog
+
 
 CURRENT_DIRECTORY = Path(__file__).resolve().parent
 LOG_PATH = paths_catalog.AUTOTS_LOGS
@@ -38,21 +42,25 @@ logger.addHandler(
 
 
 class StonksAutoTS:
-    selectedMode = None
+    selectedMode = AutoTSConfigs.FAST
     __forecasts_generated_by_training = []
     __dataset_is_long = False  # True if only estimating based on pure time series, false if estimating based on other features in timeseries (wide dataset)
+    __stocks_data_dump_location = from_root(
+        get_dataset_catalog()["datasets"]["generated"]["Stocks Data"]["location"]
+    )
 
     @classmethod
     def __get_stocks_data(cls):
         stocks = get_ticker_symbols()
         period = "3mo"
+        end_date = cls.__get_last_weekday(datetime.today())
         stocks_dfs_dict = {
-            stock: yf.Ticker(stock).history(
-                period=period, end=cls.__get_last_weekday(datetime.today())
-            )
+            stock: yf.Ticker(stock).history(period=period, end=end_date)
             for stock in stocks
         }
-        return stocks_dfs_dict
+        log_params({"stocks": stocks, "stocks_period": period, "end_date": end_date})
+
+        return stocks_dfs_dict, end_date
 
     @staticmethod
     def __get_last_weekday(date):
@@ -97,13 +105,13 @@ class StonksAutoTS:
             "validation_results": validation_results,
         }
 
-        [
+        for artifact_name, artifact in artifacts.items():
+            dumpfile_path = f"""{save_location}/{f"{ticker_name}_{artifact_name}_{predictionTarget.lower() if predictionTarget else 'wide_dataset'}"}.joblib"""
             dump(
                 artifact,
-                f"""{save_location}/{f"{ticker_name}_{artifact_name}_{predictionTarget.lower() if predictionTarget else 'wide_dataset'}"}.joblib""",
+                dumpfile_path,
             )
-            for artifact_name, artifact in artifacts.items()
-        ]
+            log_artifact(dumpfile_path)
 
         cls.__forecasts_generated_by_training.append(
             {"ticker_name": ticker_name, "forecast": forecast}
@@ -133,9 +141,15 @@ class StonksAutoTS:
     @classmethod
     @exec_time
     def train_and_forecast_stonks(cls):
-        ticker_dfs = cls.__get_stocks_data()
+        ticker_dfs, end_date = cls.__get_stocks_data()
 
-        cls.selectedMode = AutoTSConfigs.DEFAULT
+        dump_location = (
+            cls.__stocks_data_dump_location / f"{end_date}_stocks_data.joblib"
+        )
+
+        dump(ticker_dfs, dump_location)
+        log_artifact(dump_location)
+
         print(f"Training AutoTS models with {cls.selectedMode} config")
 
         detected_num_cores = numexpr.detect_number_of_cores()
@@ -164,6 +178,7 @@ def train_stonks():
     StonksAutoTS.train_and_forecast_stonks()
     logger.info("\n\n\n Forecasts generated from latest data:")
     StonksAutoTS.log_results_from_training()
+    log_param("AutoTS mode", StonksAutoTS.selectedMode)
 
 
 if __name__ == "__main__":
