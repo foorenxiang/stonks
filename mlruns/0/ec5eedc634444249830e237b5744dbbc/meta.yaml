@@ -1,0 +1,15 @@
+artifact_uri: file:///home/renxiang/Developer/streamlit_stonks/mlruns/0/ec5eedc634444249830e237b5744dbbc/artifacts
+end_time: 1622984057749
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: ec5eedc634444249830e237b5744dbbc
+run_uuid: ec5eedc634444249830e237b5744dbbc
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1622984050817
+status: 3
+tags: []
+user_id: renxiang
