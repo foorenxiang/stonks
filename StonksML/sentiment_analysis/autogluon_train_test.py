@@ -16,7 +16,7 @@ from from_root import from_root
 
 sys.path.append(str(from_root(".")))
 from utils import paths_catalog
-from utils.mlflow_wrapper import WrapModelInMlFlow
+from utils.mlflow_wrapper import GenericModel
 
 CURRENT_DIRECTORY = Path(__file__).resolve().parent
 MODEL_SAVE_PATH = paths_catalog.AUTOGLUON_MODEL
@@ -71,7 +71,7 @@ def train_test():
     mlflow_model_path = str(
         paths_catalog.AUTOTS_MLFLOW_MODEL_DUMP / f"sentiment_analysis_{datetime.date()}"
     )
-    pyfunc.save_model(path=mlflow_model_path, python_model=WrapModelInMlFlow(predictor))
+    pyfunc.save_model(path=mlflow_model_path, python_model=GenericModel(predictor))
 
     """Evaluation"""
     test_score = predictor.evaluate(test_data, metrics=["acc", "f1"])

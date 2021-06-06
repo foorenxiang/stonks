@@ -23,7 +23,7 @@ from utils import paths_catalog
 from utils.exec_time import exec_time
 from utils.ticker_symbols import get_ticker_symbols
 from utils.get_dataset_catalog import get_dataset_catalog
-from utils.mlflow_wrapper import WrapModelInMlFlow
+from utils.mlflow_wrapper import GenericModel
 
 
 CURRENT_DIRECTORY = Path(__file__).resolve().parent
@@ -94,7 +94,7 @@ class StonksAutoTS:
 
         cls.__purge_existing_identical_mlflow_model(absolute_mlflow_model_path)
 
-        mlflow_python_model = WrapModelInMlFlow(model)
+        mlflow_python_model = GenericModel(model)
 
         pyfunc.save_model(
             path=absolute_mlflow_model_path, python_model=mlflow_python_model
