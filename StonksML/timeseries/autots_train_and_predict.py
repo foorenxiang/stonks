@@ -79,6 +79,11 @@ class StonksAutoTS:
         yf_df["DateCol"] = yf_df.apply(lambda row: row.name, axis=1)
         return yf_df
 
+    @staticmethod
+    def __purge_existing_identical_mlflow_model(absolute_mlflow_model_path):
+        if Path(absolute_mlflow_model_path).exists():
+            rmtree(absolute_mlflow_model_path)
+
     @classmethod
     def __mlflow_save_model(cls, ticker_name, predictionTarget, model):
         mlflow_relative_model_path = f"{ticker_name}_{predictionTarget if predictionTarget else 'wide'}_{cls.__get_last_weekday(datetime.today())}_model"
@@ -87,11 +92,16 @@ class StonksAutoTS:
             paths_catalog.AUTOTS_MLFLOW_MODEL_DUMP / mlflow_relative_model_path
         )
 
-        if Path(absolute_mlflow_model_path).exists():
-            rmtree(absolute_mlflow_model_path)
+        cls.__purge_existing_identical_mlflow_model(absolute_mlflow_model_path)
+
+        mlflow_python_model = WrapModelInMlFlow(model)
 
         pyfunc.save_model(
-            path=absolute_mlflow_model_path, python_model=WrapModelInMlFlow(model)
+            path=absolute_mlflow_model_path, python_model=mlflow_python_model
+        )
+
+        pyfunc.log_model(
+            artifact_path=mlflow_relative_model_path, python_model=mlflow_python_model
         )
 
         # loaded_model = pyfunc.load_model(absolute_mlflow_model_path)
