@@ -1,19 +1,22 @@
 # https://auto.gluon.ai/stable/tutorials/text_prediction/beginner.html
 # https://auto.gluon.ai/stable/install.html
 
+from datetime import datetime
+from mlflow.pyfunc import model
 import numpy as np
 import warnings
 import pandas as pd
 import joblib
 import logging
 from pathlib import Path
-from mlflow import log_metric, log_param, log_artifacts
+from mlflow import log_metric, log_param, log_artifacts, pyfunc
 
 import sys
 from from_root import from_root
 
 sys.path.append(str(from_root(".")))
 from utils import paths_catalog
+from utils.mlflow_wrapper import WrapModelInMlFlow
 
 CURRENT_DIRECTORY = Path(__file__).resolve().parent
 MODEL_SAVE_PATH = paths_catalog.AUTOGLUON_MODEL
@@ -64,6 +67,11 @@ def train_test():
     time_limit_in_secs = 15 * SECS_IN_HOUR
     predictor = TextPredictor(label="label", eval_metric="acc", path=MODEL_SAVE_PATH)
     predictor.fit(train_data, time_limit=time_limit_in_secs)
+
+    mlflow_model_path = str(
+        paths_catalog.AUTOTS_MLFLOW_MODEL_DUMP / f"sentiment_analysis_{datetime.date()}"
+    )
+    pyfunc.save_model(path=mlflow_model_path, python_model=WrapModelInMlFlow(predictor))
 
     """Evaluation"""
     test_score = predictor.evaluate(test_data, metrics=["acc", "f1"])
