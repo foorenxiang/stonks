@@ -9,8 +9,9 @@ from datetime import datetime, timedelta
 import numexpr
 import os
 import logging
-from mlflow import log_param, log_params, log_artifact
+from mlflow import pyfunc, log_param, log_params, log_artifact
 from autots_config import AutoTSConfigs
+
 
 import sys
 from from_root import from_root
@@ -20,6 +21,7 @@ from utils import paths_catalog
 from utils.exec_time import exec_time
 from utils.ticker_symbols import get_ticker_symbols
 from utils.get_dataset_catalog import get_dataset_catalog
+from utils.mlflow_wrapper import WrapModelInMlFlow
 
 
 CURRENT_DIRECTORY = Path(__file__).resolve().parent
@@ -92,10 +94,19 @@ class StonksAutoTS:
             value_col=predictionTarget,
         )
 
-        prediction = model.predict()
-        forecast = prediction.forecast
+        # prediction = model.predict()
+        # forecast = prediction.forecast
         model_results = model.results()
         validation_results = model.results("validation")
+        model_path = f"mlflow/{ticker_name}_{cls.__get_last_weekday}_model"
+
+        pyfunc.save_model(path=model_path, python_model=WrapModelInMlFlow(model))
+
+        loaded_model = pyfunc.load_model(model_path)
+
+        prediction = loaded_model.predict(None)
+        forecast = prediction.forecast
+        # model_results = loaded_model.results()
 
         artifacts = {
             "model": model,
@@ -112,6 +123,7 @@ class StonksAutoTS:
                 dumpfile_path,
             )
             log_artifact(dumpfile_path)
+            # pyfunc.save_model()
 
         cls.__forecasts_generated_by_training.append(
             {"ticker_name": ticker_name, "forecast": forecast}
