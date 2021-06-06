@@ -10,7 +10,9 @@ import numexpr
 import os
 import logging
 from mlflow import pyfunc, log_param, log_params, log_artifact
+from mlflow.exceptions import MlflowException
 from autots_config import AutoTSConfigs
+from shutil import rmtree
 
 
 import sys
@@ -78,6 +80,26 @@ class StonksAutoTS:
         return yf_df
 
     @classmethod
+    def __mlflow_save_model(cls, ticker_name, predictionTarget, model):
+        mlflow_relative_model_path = f"{ticker_name}_{predictionTarget if predictionTarget else 'wide'}_{cls.__get_last_weekday(datetime.today())}_model"
+
+        absolute_mlflow_model_path = str(
+            paths_catalog.AUTOTS_MLFLOW_MODEL_DUMP / mlflow_relative_model_path
+        )
+
+        if Path(absolute_mlflow_model_path).exists():
+            rmtree(absolute_mlflow_model_path)
+
+        pyfunc.save_model(
+            path=absolute_mlflow_model_path, python_model=WrapModelInMlFlow(model)
+        )
+
+        # loaded_model = pyfunc.load_model(absolute_mlflow_model_path)
+
+        # prediction = loaded_model.predict(None)
+        # forecast = prediction.forecast
+
+    @classmethod
     def __train_model(
         cls, save_location, ticker_name, ticker_dfs, predictionTarget=None
     ):
@@ -94,19 +116,12 @@ class StonksAutoTS:
             value_col=predictionTarget,
         )
 
-        # prediction = model.predict()
-        # forecast = prediction.forecast
+        prediction = model.predict()
+        forecast = prediction.forecast
         model_results = model.results()
         validation_results = model.results("validation")
-        model_path = f"mlflow/{ticker_name}_{cls.__get_last_weekday}_model"
 
-        pyfunc.save_model(path=model_path, python_model=WrapModelInMlFlow(model))
-
-        loaded_model = pyfunc.load_model(model_path)
-
-        prediction = loaded_model.predict(None)
-        forecast = prediction.forecast
-        # model_results = loaded_model.results()
+        cls.__mlflow_save_model(ticker_name, predictionTarget, model)
 
         artifacts = {
             "model": model,
@@ -123,7 +138,6 @@ class StonksAutoTS:
                 dumpfile_path,
             )
             log_artifact(dumpfile_path)
-            # pyfunc.save_model()
 
         cls.__forecasts_generated_by_training.append(
             {"ticker_name": ticker_name, "forecast": forecast}
