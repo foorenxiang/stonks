@@ -1,4 +1,4 @@
-from mlflow.pyfunc import PythonModel, PyFuncModel
+from mlflow.pyfunc import PythonModel
 import logging
 
 logging.basicConfig(level=logging.INFO)
