@@ -12,9 +12,9 @@ class GenericModel(PythonModel):
     def predict(self, context, model_input=None):
         context
         if model_input:
-            logger.info("Running model prediction without input")
+            logger.info("Running model prediction with input")
             return self.model.predict(model_input)
-        logger.info("Running model prediction with input")
+        logger.info("Running model prediction without input")
         return self.model.predict()
 
     def access_model_attribute(self, attribute: str) -> any:
