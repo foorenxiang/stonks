@@ -37,6 +37,7 @@ Werkzeug = "==1.0.1"
 mlflow = "*"
 pyyaml = "*"
 pandas = "*"
+seaborn = "*"
 
 [dev-packages]
 black = "*"
