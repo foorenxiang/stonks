@@ -48,25 +48,31 @@ class StreamlitShowTickers:
             tickerDF = cls._retrieve_ticker_data(tickerSymbol)
 
             if not tickerDF.Close.empty | tickerDF.Volume.empty:
-                try:
-                    st.write(f"## {tickerSymbol}")
-                    st.line_chart(tickerDF.Close)
-                    st.write(f"{tickerSymbol} Closing Prices")
 
-                    st.line_chart(tickerDF.Volume)
-                    st.write(f"{tickerSymbol} Volume\n\n\n")
-                except TypeError:
-                    st.write(
-                        f"Error encountered with writing full results for {tickerSymbol}"
-                    )
+                st.write(f"## {tickerSymbol}")
+                st.write(f"{tickerSymbol} Opening Prices")
+                st.line_chart(tickerDF.Open)
+
+                st.write(f"{tickerSymbol} Closing Prices")
+                st.line_chart(tickerDF.Close)
+
+                st.write(f"{tickerSymbol} Volume\n\n\n")
+                st.line_chart(tickerDF.Volume)
+
+                from StonksStreamlit.static_analysis import fig
+
+                st.pyplot(fig)
 
             else:
                 st.write(f"{tickerSymbol} is not a valid symbol on Yahoo Finance!!")
 
-            for prediction in stocks_predictions:
-                if prediction["name"] == tickerSymbol:
-                    st.write(f"## Forecast for {tickerSymbol}")
-                    for key in prediction.keys():
-                        if key != "name":
-                            st.line_chart(prediction[key])
-                    break
+            try:
+                for prediction in stocks_predictions:
+                    if prediction["name"] == tickerSymbol:
+                        st.write(f"## Forecast for {tickerSymbol}")
+                        for key in prediction.keys():
+                            if key != "name":
+                                st.line_chart(prediction[key])
+                        break
+            except TypeError:
+                st.write(f"Prediction results for {tickerSymbol} are not yet available")
