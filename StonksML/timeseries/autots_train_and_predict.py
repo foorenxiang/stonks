@@ -11,7 +11,7 @@ import os
 import logging
 from mlflow import pyfunc, log_param, log_params, log_artifact
 from mlflow.exceptions import MlflowException
-from autots_config import AutoTSConfigs
+from StonksML.timeseries.autots_config import AutoTSConfigs
 from shutil import rmtree
 
 
