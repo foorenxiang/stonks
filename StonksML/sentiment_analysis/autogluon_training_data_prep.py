@@ -15,28 +15,28 @@ logger = logging.getLogger(__name__)
 
 
 class SentimentalAnalysisDataPreprocessor:
-    __DATASET_DIRECTORY = paths_catalog.RAW_DATASETS
-    __DUMP_DIRECTORY = paths_catalog.PREPROCESSED_DATASETS
-    __PROCESSED_FILENAME = "full_preprocessed_reddit_twitter_dataset"
-    __training_datasets_name = {
+    _DATASET_DIRECTORY = paths_catalog.RAW_DATASETS
+    _DUMP_DIRECTORY = paths_catalog.PREPROCESSED_DATASETS
+    _PROCESSED_FILENAME = "full_preprocessed_reddit_twitter_dataset"
+    _training_datasets_name = {
         "training.1600000.processed.noemoticon": r"training.1600000.processed.noemoticon.csv",
         "Reddit_Data": r"Reddit_Data.csv",
         "Twitter_Data": r"Twitter_Data.csv",
     }
-    __unit_rows_to_take_per_dataset = 36800
-    __sources = {"twitter": "twitter", "reddit": "reddit"}
+    _unit_rows_to_take_per_dataset = 36800
+    _sources = {"twitter": "twitter", "reddit": "reddit"}
 
     @staticmethod
-    def __process_shuffle_rows(df):
+    def _process_shuffle_rows(df):
         return df.sample(frac=1).reset_index(drop=True)
 
     @staticmethod
-    def __process_annotate_source(df, source):
+    def _process_annotate_source(df, source):
         df["source"] = source
         return df
 
     @staticmethod
-    def __df_describe(df, df_name=""):
+    def _df_describe(df, df_name=""):
         logger.info(f"Describing dataframe {df_name}:")
         logger.info(df.info())
         logger.info(f"Shape: {df.shape}")
@@ -49,12 +49,12 @@ class SentimentalAnalysisDataPreprocessor:
             df["label"].replace([-1, 0, 1], [0, 0, 1], inplace=True)
             return df
 
-        dataset_name = cls.__training_datasets_name["Reddit_Data"]
+        dataset_name = cls._training_datasets_name["Reddit_Data"]
         dataset = {
             "name": dataset_name,
-            "location": cls.__DATASET_DIRECTORY / dataset_name,
+            "location": cls._DATASET_DIRECTORY / dataset_name,
             "drop_duplicates": True,
-            "samples_to_take": cls.__unit_rows_to_take_per_dataset * 1,
+            "samples_to_take": cls._unit_rows_to_take_per_dataset * 1,
         }
         dataset["df"] = (
             pd.read_csv(dataset["location"])
@@ -63,11 +63,11 @@ class SentimentalAnalysisDataPreprocessor:
         )
         dataset["df"].columns = ["sentence", "label"]
         dataset["df"] = process_convert_to_positive_vs_rest_annotation(dataset["df"])
-        dataset["df"] = cls.__process_shuffle_rows(dataset["df"])
-        dataset["df"] = cls.__process_annotate_source(
-            dataset["df"], cls.__sources["reddit"]
+        dataset["df"] = cls._process_shuffle_rows(dataset["df"])
+        dataset["df"] = cls._process_annotate_source(
+            dataset["df"], cls._sources["reddit"]
         )
-        cls.__df_describe(dataset["df"], dataset["name"])
+        cls._df_describe(dataset["df"], dataset["name"])
         return dataset
 
     @classmethod
@@ -76,12 +76,12 @@ class SentimentalAnalysisDataPreprocessor:
             df["label"].replace([-1, 0, 1], [0, 0, 1], inplace=True)
             return df
 
-        dataset_name = cls.__training_datasets_name["Twitter_Data"]
+        dataset_name = cls._training_datasets_name["Twitter_Data"]
         dataset = {
             "name": dataset_name,
-            "location": cls.__DATASET_DIRECTORY / dataset_name,
+            "location": cls._DATASET_DIRECTORY / dataset_name,
             "drop_duplicates": True,
-            "samples_to_take": cls.__unit_rows_to_take_per_dataset * 1,
+            "samples_to_take": cls._unit_rows_to_take_per_dataset * 1,
         }
         dataset["df"] = (
             pd.read_csv(dataset["location"])
@@ -92,11 +92,11 @@ class SentimentalAnalysisDataPreprocessor:
         dataset["df"].columns = ["sentence", "label"]
         dataset["df"]["label"] = dataset["df"]["label"].astype("int64")
         dataset["df"] = process_convert_to_positive_vs_rest_annotation(dataset["df"])
-        dataset["df"] = cls.__process_shuffle_rows(dataset["df"])
-        dataset["df"] = cls.__process_annotate_source(
-            dataset["df"], cls.__sources["twitter"]
+        dataset["df"] = cls._process_shuffle_rows(dataset["df"])
+        dataset["df"] = cls._process_annotate_source(
+            dataset["df"], cls._sources["twitter"]
         )
-        cls.__df_describe(dataset["df"], dataset["name"])
+        cls._df_describe(dataset["df"], dataset["name"])
         return dataset
 
     @classmethod
@@ -105,14 +105,14 @@ class SentimentalAnalysisDataPreprocessor:
             df["label"].replace([0, 2, 4], [0, 0, 1], inplace=True)
             return df
 
-        dataset_name = cls.__training_datasets_name[
+        dataset_name = cls._training_datasets_name[
             "training.1600000.processed.noemoticon"
         ]
         dataset = {
             "name": dataset_name,
-            "location": cls.__DATASET_DIRECTORY / dataset_name,
+            "location": cls._DATASET_DIRECTORY / dataset_name,
             "drop_duplicates": True,
-            "samples_to_take": cls.__unit_rows_to_take_per_dataset * 1,
+            "samples_to_take": cls._unit_rows_to_take_per_dataset * 1,
         }
         dataset["df"] = (
             pd.read_csv(dataset["location"])
@@ -123,21 +123,21 @@ class SentimentalAnalysisDataPreprocessor:
         dataset["df"] = dataset["df"][["text", "target"]]
         dataset["df"].columns = ["sentence", "label"]
         dataset["df"] = process_convert_to_positive_vs_rest_annotation(dataset["df"])
-        dataset["df"] = cls.__process_shuffle_rows(dataset["df"])
-        dataset["df"] = cls.__process_annotate_source(
-            dataset["df"], cls.__sources["twitter"]
+        dataset["df"] = cls._process_shuffle_rows(dataset["df"])
+        dataset["df"] = cls._process_annotate_source(
+            dataset["df"], cls._sources["twitter"]
         )
-        cls.__df_describe(dataset["df"], dataset["name"])
+        cls._df_describe(dataset["df"], dataset["name"])
         return dataset
 
     @classmethod
     def preprocess_all_datasets(cls):
         try:
-            cls.__DATASET_DIRECTORY.mkdir()
+            cls._DATASET_DIRECTORY.mkdir()
         except FileExistsError:
-            logger.info(f"{cls.__DATASET_DIRECTORY} directory already exists, using it")
+            logger.info(f"{cls._DATASET_DIRECTORY} directory already exists, using it")
 
-        logger.info(f"Datasets directory: {cls.__DATASET_DIRECTORY}")
+        logger.info(f"Datasets directory: {cls._DATASET_DIRECTORY}")
         complete_dataset = pd.DataFrame({"sentence": [], "label": [], "source": []})
         _16_milion_tweets = cls.process_16_million_tweets()
         complete_dataset = pd.merge(
@@ -150,17 +150,17 @@ class SentimentalAnalysisDataPreprocessor:
             complete_dataset, _36800_reddit_dataset["df"], how="outer"
         )
 
-        complete_dataset = cls.__process_shuffle_rows(complete_dataset)
+        complete_dataset = cls._process_shuffle_rows(complete_dataset)
 
         joblib.dump(
             complete_dataset,
-            cls.__DUMP_DIRECTORY / f"{cls.__PROCESSED_FILENAME}.joblib",
+            cls._DUMP_DIRECTORY / f"{cls._PROCESSED_FILENAME}.joblib",
         )
         complete_dataset.to_csv(
-            cls.__DUMP_DIRECTORY / f"{cls.__PROCESSED_FILENAME}.csv"
+            cls._DUMP_DIRECTORY / f"{cls._PROCESSED_FILENAME}.csv"
         )
 
-        cls.__df_describe(complete_dataset, "complete dataset")
+        cls._df_describe(complete_dataset, "complete dataset")
 
     @classmethod
     def preprocess_training_data(cls):

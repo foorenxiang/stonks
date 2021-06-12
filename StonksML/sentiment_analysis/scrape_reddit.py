@@ -49,9 +49,9 @@ class ScrapeReddit:
     MAX_POSTS_PER_SUBREDDIT = 100
     subreddit_list = []
     flair_filters = []
-    __posts = {}
-    __posts_df = None
-    __reddit_dataset_name = "latest_reddit_data"
+    _posts = {}
+    _posts_df = None
+    _reddit_dataset_name = "latest_reddit_data"
 
     @classmethod
     def config(
@@ -77,7 +77,7 @@ class ScrapeReddit:
             )
 
     @staticmethod
-    def __praw_helper():
+    def _praw_helper():
         load_dotenv()
 
         REDDIT_PERSONAL_USE_SCRIPT = env["REDDIT_PERSONAL_USE_SCRIPT"]
@@ -107,10 +107,10 @@ class ScrapeReddit:
         return True
 
     @classmethod
-    def __retrieve_posts(cls):
+    def _retrieve_posts(cls):
         cls.save_directory
 
-        reddit_instance = cls.__praw_helper()
+        reddit_instance = cls._praw_helper()
 
         subred_list = []
         author_list = []
@@ -147,7 +147,7 @@ class ScrapeReddit:
 
             logger.info(f"Scraped {subreddit_post_count} posts from {subred.upper()}")
 
-        cls.__posts = {
+        cls._posts = {
             "Subreddit": subred_list,
             "Title": title_list,
             "Count_of_Comments": num_comments_list,
@@ -158,35 +158,35 @@ class ScrapeReddit:
         }
 
     @classmethod
-    def __posts_ETL(cls):
+    def _posts_ETL(cls):
         try:
-            assert cls.__posts
+            assert cls._posts
         except AssertionError:
             logger.error("No posts scraped yet!")
             return
 
-        cls.__posts_df = pd.DataFrame(cls.__posts)
-        cls.__posts_df.to_csv(cls.save_directory / f"{cls.__reddit_dataset_name}.csv")
-        dump(cls.__posts_df, cls.save_directory / f"{cls.__reddit_dataset_name}.joblib")
+        cls._posts_df = pd.DataFrame(cls._posts)
+        cls._posts_df.to_csv(cls.save_directory / f"{cls._reddit_dataset_name}.csv")
+        dump(cls._posts_df, cls.save_directory / f"{cls._reddit_dataset_name}.joblib")
 
     @classmethod
-    def __flairs(cls):
+    def _flairs(cls):
         try:
-            assert not cls.__posts_df.empty
+            assert not cls._posts_df.empty
         except (AssertionError, AttributeError):
             logger.warning("No posts to check!")
             return
 
-        flairs = cls.__posts_df["Flair"].unique()
+        flairs = cls._posts_df["Flair"].unique()
         logger.info("Flairs:")
         for flair in flairs:
             logger.info(flair)
 
     @classmethod
     def scrape(cls):
-        cls.__retrieve_posts()
-        cls.__posts_ETL()
-        cls.__flairs()
+        cls._retrieve_posts()
+        cls._posts_ETL()
+        cls._flairs()
 
 
 def scrape():
