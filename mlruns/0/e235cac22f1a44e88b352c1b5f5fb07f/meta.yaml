@@ -1,0 +1,15 @@
+artifact_uri: file:///home/renxiang/Developer/stonks/mlruns/0/e235cac22f1a44e88b352c1b5f5fb07f/artifacts
+end_time: 1623605731206
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: e235cac22f1a44e88b352c1b5f5fb07f
+run_uuid: e235cac22f1a44e88b352c1b5f5fb07f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1623605662014
+status: 3
+tags: []
+user_id: renxiang

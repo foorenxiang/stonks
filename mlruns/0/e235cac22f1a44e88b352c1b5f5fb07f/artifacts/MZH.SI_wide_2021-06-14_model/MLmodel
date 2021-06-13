@@ -1,0 +1,10 @@
+artifact_path: MZH.SI_wide_2021-06-14_model
+flavors:
+  python_function:
+    cloudpickle_version: 1.6.0
+    env: conda.yaml
+    loader_module: mlflow.pyfunc.model
+    python_model: python_model.pkl
+    python_version: 3.8.5
+run_id: e235cac22f1a44e88b352c1b5f5fb07f
+utc_time_created: '2021-06-13 17:34:55.004653'
