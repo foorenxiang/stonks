@@ -1,6 +1,7 @@
 # modified from https://towardsdatascience.com/train-multiple-time-series-forecasting-models-in-one-line-of-python-code-615f2253b67a
 # modified from https://towardsdatascience.com/how-to-get-stock-data-using-python-c0de1df17e75
 
+import mlflow
 from mlflow.tracking.fluent import log_artifacts, log_params
 import yfinance as yf
 from joblib import dump
@@ -13,6 +14,7 @@ from mlflow import pyfunc, log_param, log_params, log_artifact
 from mlflow.exceptions import MlflowException
 from autots_config import AutoTSConfigs
 from shutil import rmtree
+from datetime import datetime
 
 
 import sys
@@ -24,10 +26,14 @@ from utils.exec_time import exec_time
 from utils.ticker_symbols import get_ticker_symbols
 from utils.get_dataset_catalog import get_dataset_catalog
 from utils.mlflow_wrapper import GenericModel
+from utils.mlflow_context_manager import mlflow_context_manager
 
 
 CURRENT_DIRECTORY = Path(__file__).resolve().parent
 LOG_PATH = paths_catalog.AUTOTS_LOGS
+
+MLFLOW_EXPERIMENT_NAME = "autots time series"
+MLFLOW_RUN_NAME_PREFIX = "AUTOTS"
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
@@ -52,6 +58,7 @@ class StonksAutoTS:
     _stocks_data_dump_location = from_root(
         get_dataset_catalog()["datasets"]["generated"]["Stocks Data"]["location"]
     )
+    _mlflow_experiment_name = f"timeseries_{datetime.now()}"
 
     @classmethod
     def _get_stocks_data(cls):
@@ -79,6 +86,10 @@ class StonksAutoTS:
         yf_df["DateCol"] = yf_df.apply(lambda row: row.name, axis=1)
         return yf_df
 
+    @classmethod
+    def _initialise_mlflow(cls):
+        mlflow.set_experiment(cls._mlflow_experiment_name)
+
     @staticmethod
     def _purge_existing_identical_mlflow_model(absolute_mlflow_model_path):
         if Path(absolute_mlflow_model_path).exists():
@@ -104,10 +115,10 @@ class StonksAutoTS:
             artifact_path=mlflow_relative_model_path, python_model=mlflow_python_model
         )
 
-        # loaded_model = pyfunc.load_model(absolute_mlflow_model_path)
+        loaded_model = pyfunc.load_model(absolute_mlflow_model_path)
 
-        # prediction = loaded_model.predict(None)
-        # forecast = prediction.forecast
+        prediction = loaded_model.predict(None)
+        forecast = prediction.forecast
 
     @classmethod
     def _train_model(
@@ -175,6 +186,9 @@ class StonksAutoTS:
         raise ValueError
 
     @classmethod
+    @mlflow_context_manager(
+        experiment_name=MLFLOW_EXPERIMENT_NAME, run_name_prefix=MLFLOW_RUN_NAME_PREFIX
+    )
     @exec_time
     def train_and_forecast_stonks(cls):
         ticker_dfs, end_date = cls._get_stocks_data()
