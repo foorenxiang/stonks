@@ -11,13 +11,13 @@ class AutoTSConfigs:
 
     FORECAST_LENGTH = 7
 
-    __suggested_validation_trials = math.floor(FORECAST_LENGTH / 3)
+    _suggested_validation_trials = math.floor(FORECAST_LENGTH / 3)
     validation_trials = (
-        __suggested_validation_trials if __suggested_validation_trials > 2 else 2
+        _suggested_validation_trials if _suggested_validation_trials > 2 else 2
     )
 
-    __autots_mode_configs = dict()
-    __autots_mode_configs[FAST] = lambda: AutoTS(
+    _autots_mode_configs = dict()
+    _autots_mode_configs[FAST] = lambda: AutoTS(
         forecast_length=AutoTSConfigs.FORECAST_LENGTH,
         frequency="infer",
         prediction_interval=0.9,
@@ -28,7 +28,7 @@ class AutoTSConfigs:
         num_validations=2,
         validation_method="backwards",
     )
-    __autots_mode_configs[ACCURATE] = lambda: AutoTS(
+    _autots_mode_configs[ACCURATE] = lambda: AutoTS(
         forecast_length=AutoTSConfigs.FORECAST_LENGTH,
         frequency="infer",
         prediction_interval=0.9,
@@ -39,7 +39,7 @@ class AutoTSConfigs:
         num_validations=AutoTSConfigs.validation_trials,
         validation_method="backwards",
     )
-    __autots_mode_configs[GPU] = lambda: AutoTS(
+    _autots_mode_configs[GPU] = lambda: AutoTS(
         forecast_length=AutoTSConfigs.FORECAST_LENGTH,
         frequency="infer",
         prediction_interval=0.9,
@@ -50,7 +50,7 @@ class AutoTSConfigs:
         num_validations=AutoTSConfigs.validation_trials,
         validation_method="backwards",
     )
-    __autots_mode_configs[DEFAULT] = lambda: AutoTS(
+    _autots_mode_configs[DEFAULT] = lambda: AutoTS(
         forecast_length=AutoTSConfigs.FORECAST_LENGTH,
         frequency="infer",
         prediction_interval=0.9,
@@ -64,4 +64,4 @@ class AutoTSConfigs:
 
     @classmethod
     def create_model_lambda(cls, selectedMode):
-        return cls.__autots_mode_configs[getattr(cls, selectedMode)]
+        return cls._autots_mode_configs[getattr(cls, selectedMode)]

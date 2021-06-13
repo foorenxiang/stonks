@@ -11,7 +11,7 @@ import os
 import logging
 from mlflow import pyfunc, log_param, log_params, log_artifact
 from mlflow.exceptions import MlflowException
-from StonksML.timeseries.autots_config import AutoTSConfigs
+from autots_config import AutoTSConfigs
 from shutil import rmtree
 
 
@@ -47,17 +47,17 @@ logger.addHandler(
 
 class StonksAutoTS:
     selectedMode = AutoTSConfigs.FAST
-    __forecasts_generated_by_training = []
-    __dataset_is_long = False  # True if only estimating based on pure time series, false if estimating based on other features in timeseries (wide dataset)
-    __stocks_data_dump_location = from_root(
+    _forecasts_generated_by_training = []
+    _dataset_is_long = False  # True if only estimating based on pure time series, false if estimating based on other features in timeseries (wide dataset)
+    _stocks_data_dump_location = from_root(
         get_dataset_catalog()["datasets"]["generated"]["Stocks Data"]["location"]
     )
 
     @classmethod
-    def __get_stocks_data(cls):
+    def _get_stocks_data(cls):
         stocks = get_ticker_symbols()
         period = "3mo"
-        end_date = cls.__get_last_weekday(datetime.today())
+        end_date = cls._get_last_weekday(datetime.today())
         stocks_dfs_dict = {
             stock: yf.Ticker(stock).history(period=period, end=end_date)
             for stock in stocks
@@ -67,32 +67,32 @@ class StonksAutoTS:
         return stocks_dfs_dict, end_date
 
     @staticmethod
-    def __get_last_weekday(date):
+    def _get_last_weekday(date):
         last_weekday = date
         while last_weekday.weekday() > 4:
             last_weekday -= timedelta(days=1)
         return str(last_weekday.date())
 
     @staticmethod
-    def __set_date_on_yf_df(yf_df):
+    def _set_date_on_yf_df(yf_df):
         """Might have performance issue"""
         yf_df["DateCol"] = yf_df.apply(lambda row: row.name, axis=1)
         return yf_df
 
     @staticmethod
-    def __purge_existing_identical_mlflow_model(absolute_mlflow_model_path):
+    def _purge_existing_identical_mlflow_model(absolute_mlflow_model_path):
         if Path(absolute_mlflow_model_path).exists():
             rmtree(absolute_mlflow_model_path)
 
     @classmethod
-    def __mlflow_save_model(cls, ticker_name, predictionTarget, model):
-        mlflow_relative_model_path = f"{ticker_name}_{predictionTarget if predictionTarget else 'wide'}_{cls.__get_last_weekday(datetime.today())}_model"
+    def _mlflow_save_model(cls, ticker_name, predictionTarget, model):
+        mlflow_relative_model_path = f"{ticker_name}_{predictionTarget if predictionTarget else 'wide'}_{cls._get_last_weekday(datetime.today())}_model"
 
         absolute_mlflow_model_path = str(
             paths_catalog.AUTOTS_MLFLOW_MODEL_DUMP / mlflow_relative_model_path
         )
 
-        cls.__purge_existing_identical_mlflow_model(absolute_mlflow_model_path)
+        cls._purge_existing_identical_mlflow_model(absolute_mlflow_model_path)
 
         mlflow_python_model = GenericModel(model)
 
@@ -110,7 +110,7 @@ class StonksAutoTS:
         # forecast = prediction.forecast
 
     @classmethod
-    def __train_model(
+    def _train_model(
         cls, save_location, ticker_name, ticker_dfs, predictionTarget=None
     ):
         if predictionTarget:
@@ -131,7 +131,7 @@ class StonksAutoTS:
         model_results = model.results()
         validation_results = model.results("validation")
 
-        cls.__mlflow_save_model(ticker_name, predictionTarget, model)
+        cls._mlflow_save_model(ticker_name, predictionTarget, model)
 
         artifacts = {
             "model": model,
@@ -149,12 +149,12 @@ class StonksAutoTS:
             )
             log_artifact(dumpfile_path)
 
-        cls.__forecasts_generated_by_training.append(
+        cls._forecasts_generated_by_training.append(
             {"ticker_name": ticker_name, "forecast": forecast}
         )
 
     @classmethod
-    def __create_model_dump_directories(cls):
+    def _create_model_dump_directories(cls):
         dump_directory = f"{str(datetime.now()).split('.')[0]} {cls.selectedMode}"
         dump_directory_parent = paths_catalog.AUTOTS_MODEL_DUMPS
         (dump_directory_parent).mkdir(exist_ok=True)
@@ -164,8 +164,8 @@ class StonksAutoTS:
 
     @classmethod
     def log_results_from_training(cls):
-        if cls.__forecasts_generated_by_training:
-            for forecast in cls.__forecasts_generated_by_training:
+        if cls._forecasts_generated_by_training:
+            for forecast in cls._forecasts_generated_by_training:
                 logger.info(f"Forecast for {forecast['ticker_name']}:")
                 logger.info(forecast["forecast"])
             return
@@ -177,10 +177,10 @@ class StonksAutoTS:
     @classmethod
     @exec_time
     def train_and_forecast_stonks(cls):
-        ticker_dfs, end_date = cls.__get_stocks_data()
+        ticker_dfs, end_date = cls._get_stocks_data()
 
         dump_location = (
-            cls.__stocks_data_dump_location / f"{end_date}_stocks_data.joblib"
+            cls._stocks_data_dump_location / f"{end_date}_stocks_data.joblib"
         )
 
         dump(ticker_dfs, dump_location)
@@ -192,13 +192,13 @@ class StonksAutoTS:
         logger.info(f"Number of cores detected on this machine: {detected_num_cores}")
         os.environ["NUMEXPR_MAX_THREADS"] = str(detected_num_cores)
 
-        absolute_dump_directory = cls.__create_model_dump_directories()
+        absolute_dump_directory = cls._create_model_dump_directories()
         for ticker_name, ticker_dfs in ticker_dfs.items():
-            ticker_dfs = cls.__set_date_on_yf_df(ticker_dfs)
-            if cls.__dataset_is_long:
+            ticker_dfs = cls._set_date_on_yf_df(ticker_dfs)
+            if cls._dataset_is_long:
                 prediction_targets = "Open", "Close"
                 [
-                    cls.__train_model(
+                    cls._train_model(
                         absolute_dump_directory,
                         ticker_name,
                         ticker_dfs,
@@ -207,7 +207,7 @@ class StonksAutoTS:
                     for prediction_target in prediction_targets
                 ]
             else:
-                cls.__train_model(absolute_dump_directory, ticker_name, ticker_dfs)
+                cls._train_model(absolute_dump_directory, ticker_name, ticker_dfs)
 
 
 def train_stonks():
