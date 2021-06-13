@@ -186,9 +186,6 @@ class StonksAutoTS:
         raise ValueError
 
     @classmethod
-    @mlflow_context_manager(
-        experiment_name=MLFLOW_EXPERIMENT_NAME, run_name_prefix=MLFLOW_RUN_NAME_PREFIX
-    )
     @exec_time
     def train_and_forecast_stonks(cls):
         ticker_dfs, end_date = cls._get_stocks_data()
@@ -224,6 +221,9 @@ class StonksAutoTS:
                 cls._train_model(absolute_dump_directory, ticker_name, ticker_dfs)
 
 
+@mlflow_context_manager(
+    experiment_name=MLFLOW_EXPERIMENT_NAME, run_name_prefix=MLFLOW_RUN_NAME_PREFIX
+)
 def train_stonks():
     StonksAutoTS.train_and_forecast_stonks()
     logger.info("\n\n\n Forecasts generated from latest data:")
